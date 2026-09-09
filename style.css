@@ -1,30 +1,35 @@
 /* ==========================================================
-   GAYA VISUAL KHAS HUKUM KELUARGA A 2025
-   Emerald Dark Glassmorphism — Mobile-First & Responsive
+   TEMA RESMI HUKUM KELUARGA A 2025
+   Modern Clean Warm Brown & Ivory White (UI/UX Khas Kelas)
    ========================================================== */
 
 :root {
-  --primary-emerald: #10b981;
-  --primary-emerald-dark: #059669;
-  --accent-gold: #f59e0b;
-  --bg-deep: #090e17;
-  --bg-card: rgba(15, 23, 42, 0.75);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(16, 185, 129, 0.3);
+  --primary-brown: #9d5f2f;
+  --primary-brown-dark: #753e1f;
+  --primary-brown-deep: #2c150c;
+  --accent-caramel: #c89a7c;
+  --accent-gold: #d97706;
+  --bg-cream: #fbf8f5;
+  --bg-sand: #f5eee7;
+  --border-warm: #eddcd0;
+  --border-focus: #9d5f2f;
+  --text-main: #2c150c;
+  --text-muted: #753e1f;
+  --text-sub: #8c7163;
 }
 
 /* Base Body Styles */
 body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-deep);
-  color: #f1f5f9;
+  background-color: var(--bg-cream);
+  color: var(--text-main);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Ambient Islamic Geometric Glow Background */
+/* Subtle Warm Aesthetic Ambient Glow (No Cyberpunk!) */
 .ambient-glow {
   position: fixed;
   top: 0;
@@ -35,40 +40,39 @@ body {
   pointer-events: none;
   z-index: 0;
   background: 
-    radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 10% 40%, rgba(245, 158, 11, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 90% 70%, rgba(6, 95, 70, 0.12) 0%, transparent 50%);
+    radial-gradient(circle at 50% 5%, rgba(157, 95, 47, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 10% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 60%, rgba(245, 238, 231, 0.8) 0%, transparent 60%);
 }
 
-/* Mesh Grid Subtle Pattern */
+/* Warm Dot Pattern */
 .bg-mesh-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(157, 95, 47, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* Glassmorphism Cards */
-.glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+/* Clean White & Warm Brown Cards */
+.warm-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-warm);
+  box-shadow: 0 4px 20px -2px rgba(117, 62, 31, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card:hover {
-  border-color: var(--border-glow);
-  box-shadow: 0 14px 35px -10px rgba(16, 185, 129, 0.2);
+.warm-card:hover {
+  border-color: rgba(157, 95, 47, 0.4);
+  box-shadow: 0 10px 25px -4px rgba(117, 62, 31, 0.12);
   transform: translateY(-2px);
 }
 
 /* Primary Highlight Link Card (Portal Web) */
 .portal-highlight-card {
-  background: linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
-  border: 1.5px solid rgba(52, 211, 153, 0.4);
-  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, #753e1f 0%, #9d5f2f 100%);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  box-shadow: 0 8px 24px -4px rgba(117, 62, 31, 0.28);
   position: relative;
   overflow: hidden;
+  color: #ffffff;
 }
 
 .portal-highlight-card::before {
@@ -78,60 +82,51 @@ body {
   left: -100%;
   width: 200%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-  animation: shine 4s infinite linear;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: warmShine 5s infinite linear;
 }
 
-@keyframes shine {
+@keyframes warmShine {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(50%); }
 }
 
-/* Avatar Border Glow Pulse */
+/* Avatar Border Clean Warm Glow */
 .avatar-glow {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 0 25px rgba(16, 185, 129, 0.35);
-  animation: pulseAvatar 3s ease-in-out infinite;
+  box-shadow: 0 0 0 3px #ffffff, 0 0 0 6px rgba(157, 95, 47, 0.2), 0 12px 24px -4px rgba(117, 62, 31, 0.2);
+  transition: transform 0.3s ease;
 }
 
-@keyframes pulseAvatar {
-  0%, 100% {
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 0 20px rgba(16, 185, 129, 0.35);
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4), 0 0 30px rgba(245, 158, 11, 0.45);
-  }
+.avatar-glow:hover {
+  transform: scale(1.03);
 }
 
 /* Tab Navigation */
 .nav-tab-btn {
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-muted);
 }
 
 .nav-tab-btn.active {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border-color: rgba(16, 185, 129, 0.4);
+  background-color: var(--primary-brown);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(157, 95, 47, 0.25);
 }
 
-.nav-tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #34d399, transparent);
-  border-radius: 9999px;
+.nav-tab-btn.active #gallery-tab-count {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
 }
 
 /* Photo Card Aspect & Hover */
 .gallery-photo-item {
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
 .gallery-photo-item:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -4px rgba(117, 62, 31, 0.15);
 }
 
 .gallery-photo-item:hover .photo-overlay {
@@ -151,7 +146,7 @@ body {
 }
 
 .modal-content-box {
-  transform: scale(0.95);
+  transform: scale(0.96);
   opacity: 0;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
 }
@@ -170,18 +165,18 @@ body {
   scrollbar-width: none;
 }
 
-/* Custom Scrollbar for Page */
+/* Custom Warm Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090e17;
+  background: #f5eee7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #c89a7c;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+  background: #9d5f2f;
 }

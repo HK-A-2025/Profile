@@ -165,8 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = filtered
       .map(
         (photo) => `
-        <div class="gallery-photo-item group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 shadow-lg cursor-pointer" data-id="${photo.id}">
-          <div class="aspect-square w-full overflow-hidden bg-slate-800">
+        <div class="gallery-photo-item group relative overflow-hidden rounded-2xl border border-[#eddcd0] bg-white shadow-xs hover:shadow-md cursor-pointer" data-id="${photo.id}">
+          <div class="aspect-square w-full overflow-hidden bg-[#f5eee7]">
             <img 
               src="${photo.imageUrl}" 
               alt="${photo.title}" 
@@ -177,15 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <!-- Overlay Info Saat Hover / Mobile -->
-          <div class="photo-overlay absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent p-3.5 flex flex-col justify-end text-left opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div class="photo-overlay absolute inset-0 bg-gradient-to-t from-[#2c150c]/90 via-[#2c150c]/40 to-transparent p-3.5 flex flex-col justify-end text-left opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div class="flex items-center gap-2 mb-1">
-              <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-[#9d5f2f] text-white border border-[#8c4e24]">
                 ${photo.category}
               </span>
-              <span class="text-[11px] text-slate-300">${photo.date || ''}</span>
+              <span class="text-[11px] text-[#eddcd0]">${photo.date || ''}</span>
             </div>
             <h4 class="text-sm font-semibold text-white line-clamp-1">${photo.title}</h4>
-            ${photo.caption ? `<p class="text-[11px] text-slate-300 line-clamp-1 mt-0.5">${photo.caption}</p>` : ''}
+            ${photo.caption ? `<p class="text-[11px] text-[#f5eee7] line-clamp-1 mt-0.5">${photo.caption}</p>` : ''}
           </div>
 
           <!-- Tombol Hapus Khusus Admin -->
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
               ? `
             <button 
               type="button"
-              class="btn-delete-photo absolute top-2.5 right-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-rose-600/90 text-white shadow-md hover:bg-rose-500 active:scale-95 transition-all"
+              class="btn-delete-photo absolute top-2.5 right-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-md hover:bg-rose-500 active:scale-95 transition-all"
               data-id="${photo.id}"
               title="Hapus Foto Ini"
             >
@@ -288,10 +288,10 @@ document.addEventListener('DOMContentLoaded', () => {
       .map(
         (cat) => `
         <button 
-          class="btn-category px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+          class="btn-category px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
             cat === state.activeCategory
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 border border-emerald-400'
-              : 'bg-slate-900/80 text-slate-300 hover:text-white border border-white/10 hover:border-emerald-500/30'
+              ? 'bg-[#9d5f2f] text-white shadow-xs border border-[#8c4e24]'
+              : 'bg-white text-[#753e1f] hover:bg-[#f5eee7] border border-[#eddcd0]'
           }"
           data-cat="${cat}"
         >
@@ -709,9 +709,9 @@ document.addEventListener('DOMContentLoaded', () => {
     listContainer.innerHTML = messages
       .map(
         (m) => `
-        <div class="rounded-xl border border-white/10 bg-slate-900/60 p-3 text-left">
-          <p class="text-xs text-slate-200">"${m.message}"</p>
-          <span class="text-[10px] text-slate-400 mt-1 block">
+        <div class="rounded-xl border border-[#eddcd0] bg-white p-3 text-left shadow-xs">
+          <p class="text-xs text-[#2c150c]">"${m.message}"</p>
+          <span class="text-[10px] text-[#8c7163] mt-1 block">
             ${new Date(m.created_at).toLocaleString('id-ID')}
           </span>
         </div>
@@ -724,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showToast = (message) => {
     const toast = document.createElement('div');
     toast.className =
-      'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-semibold text-white shadow-xl shadow-emerald-900/50 transition-all duration-300';
+      'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full bg-[#753e1f] px-4 py-2.5 text-xs font-bold text-white shadow-xl shadow-[#2c150c]/25 transition-all duration-300';
     toast.innerHTML = `<span>✓</span><span>${message}</span>`;
     document.body.appendChild(toast);
 

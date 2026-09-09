@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -23,17 +23,22 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            emerald: {
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              900: '#064e3b',
-              950: '#022c22',
+            uin: {
+              primary: "#9d5f2f",
+              50: "#fbf8f5",
+              100: "#f5eee7",
+              200: "#eddcd0",
+              300: "#dfc2b0",
+              400: "#c89a7c",
+              500: "#9d5f2f",
+              600: "#8c4e24",
+              700: "#753e1f",
+              800: "#61331d",
+              900: "#502c1b",
+              950: "#2c150c",
             },
           },
         },
@@ -47,14 +52,14 @@
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Custom Styles -->
+  <!-- Custom Styles (Warm Brown & Ivory White) -->
   <link rel="stylesheet" href="./style.css" />
 </head>
 
-<body class="bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500 selection:text-white">
-  <!-- Ambient Background Glow & Mesh -->
+<body class="bg-[#fbf8f5] text-[#2c150c] antialiased selection:bg-[#9d5f2f] selection:text-white">
+  <!-- Subtle Warm Ambient Background -->
   <div class="ambient-glow"></div>
-  <div class="fixed inset-0 bg-mesh-pattern opacity-40 pointer-events-none z-0"></div>
+  <div class="fixed inset-0 bg-mesh-pattern opacity-60 pointer-events-none z-0"></div>
 
   <!-- Kontainer Utama (Mobile-First Max Width) -->
   <div class="relative z-10 mx-auto min-h-screen max-w-md flex flex-col justify-between px-4 py-6 sm:px-6">
@@ -63,8 +68,8 @@
     <div>
       <!-- Bar Atas: Tombol Aksi Cepat -->
       <div class="flex items-center justify-between pb-4">
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-400">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-[#eddcd0] bg-white px-3 py-1 text-[11px] font-semibold text-[#753e1f] shadow-xs">
+          <span class="h-1.5 w-1.5 rounded-full bg-[#9d5f2f] animate-ping"></span>
           HK A • Angkatan 2025
         </span>
 
@@ -73,7 +78,7 @@
           <button 
             id="btn-share-profile" 
             type="button" 
-            class="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-slate-300 hover:text-white hover:border-emerald-500/40 active:scale-95 transition-all shadow-sm"
+            class="flex h-8 w-8 items-center justify-center rounded-full border border-[#eddcd0] bg-white text-[#753e1f] hover:text-[#9d5f2f] hover:border-[#9d5f2f] active:scale-95 transition-all shadow-xs"
             title="Bagikan Tautan"
           >
             <i data-lucide="share-2" class="w-4 h-4"></i>
@@ -83,7 +88,7 @@
           <button 
             id="btn-admin-login" 
             type="button" 
-            class="flex h-8 items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 px-2.5 text-[11px] font-medium text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 active:scale-95 transition-all shadow-sm"
+            class="flex h-8 items-center gap-1 rounded-full border border-[#eddcd0] bg-white px-2.5 text-[11px] font-medium text-[#753e1f] hover:text-[#9d5f2f] hover:border-[#9d5f2f] active:scale-95 transition-all shadow-xs"
             title="Masuk Pengurus Kelas"
           >
             <i data-lucide="lock" class="w-3.5 h-3.5"></i>
@@ -93,41 +98,41 @@
       </div>
 
       <!-- Banner Mode Admin Aktif -->
-      <div id="admin-banner" class="hidden mb-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/60 p-3 shadow-lg shadow-emerald-950/40 backdrop-blur-md">
+      <div id="admin-banner" class="hidden mb-4 rounded-2xl border border-[#dfc2b0] bg-[#f5eee7] p-3.5 shadow-sm">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-950 text-xs font-bold">✓</span>
+          <div class="flex items-center gap-2.5">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-[#9d5f2f] text-white text-xs font-bold shadow-xs">✓</span>
             <div>
-              <p class="text-xs font-bold text-emerald-300">Mode Admin Aktif</p>
-              <p class="text-[10px] text-slate-300">Anda dapat menambah dan menghapus foto galeri.</p>
+              <p class="text-xs font-bold text-[#61331d]">Mode Admin Aktif</p>
+              <p class="text-[10px] text-[#753e1f]">Anda dapat menambah dan menghapus foto galeri.</p>
             </div>
           </div>
           <button 
             id="btn-admin-logout" 
             type="button"
-            class="rounded-lg bg-slate-900 px-2.5 py-1 text-[10px] font-semibold text-rose-400 border border-rose-500/30 hover:bg-rose-500 hover:text-white transition-all"
+            class="rounded-lg bg-white px-2.5 py-1 text-[10px] font-semibold text-rose-600 border border-rose-200 hover:bg-rose-50 transition-all shadow-xs"
           >
             Keluar
           </button>
         </div>
       </div>
 
-      <!-- Profil Avatar & Identitas -->
-      <div class="text-center pt-2 pb-6">
+      <!-- Profil Avatar & Identitas Khas Kelas -->
+      <div class="text-center pt-2 pb-5">
         <div class="relative mx-auto inline-block">
-          <div class="avatar-glow h-24 w-24 overflow-hidden rounded-full border-2 border-emerald-400/80 bg-slate-900 shadow-xl">
+          <div class="avatar-glow h-24 w-24 overflow-hidden rounded-full border-2 border-[#9d5f2f] bg-white shadow-md">
             <img 
               src="./logo.png" 
               alt="Logo Resmi Hukum Keluarga A 2025" 
               class="h-full w-full object-cover p-1"
             />
           </div>
-          <span class="absolute bottom-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-950 shadow-md ring-2 ring-slate-950" title="Terverifikasi Resmi">
+          <span class="absolute bottom-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#9d5f2f] text-white shadow-sm ring-2 ring-white" title="Terverifikasi Resmi">
             <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>
           </span>
         </div>
 
-        <h1 class="mt-3.5 text-xl font-extrabold tracking-tight text-white flex items-center justify-center gap-1.5">
+        <h1 class="mt-3.5 text-xl font-extrabold tracking-tight text-[#2c150c] flex items-center justify-center gap-1.5">
           Hukum Keluarga A 2025
         </h1>
 
@@ -135,26 +140,26 @@
           href="https://instagram.com/chapterofushka" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+          class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[#9d5f2f] hover:text-[#753e1f] transition-colors"
         >
           <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
           <span>@chapterofushka</span>
         </a>
 
-        <p class="mt-1.5 text-xs text-slate-400">
+        <p class="mt-1.5 text-xs text-[#753e1f] font-medium">
           Fakultas Syariah • UIN Siber Syekh Nurjati Cirebon
         </p>
 
-        <div class="mt-3 inline-block rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-medium text-amber-300 shadow-sm">
+        <div class="mt-2.5 inline-block rounded-full border border-[#eddcd0] bg-white px-3.5 py-1 text-[11px] font-medium text-[#753e1f] shadow-xs">
           ⚖️ Integritas Hukum, Berkeadaban Siber
         </div>
       </div>
 
-      <!-- Tab Navigasi Utama -->
-      <div class="mb-5 grid grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-slate-900/80 p-1 backdrop-blur-md">
+      <!-- Tab Navigasi Utama (Coklat & Putih Modern) -->
+      <div class="mb-5 grid grid-cols-3 gap-1 rounded-2xl border border-[#eddcd0] bg-[#f5eee7] p-1">
         <button 
           type="button" 
-          class="nav-tab-btn active flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold text-slate-300 hover:text-white"
+          class="nav-tab-btn active flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold"
           data-tab="links"
         >
           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
@@ -163,17 +168,17 @@
 
         <button 
           type="button" 
-          class="nav-tab-btn flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold text-slate-300 hover:text-white"
+          class="nav-tab-btn flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold"
           data-tab="gallery"
         >
           <i data-lucide="camera" class="w-3.5 h-3.5"></i>
           <span>Galeri</span>
-          <span id="gallery-tab-count" class="rounded-full bg-emerald-500/20 px-1.5 py-0.2 text-[10px] text-emerald-300 font-bold">0</span>
+          <span id="gallery-tab-count" class="rounded-full bg-[#dfc2b0] px-1.5 py-0.2 text-[10px] text-[#61331d] font-bold">0</span>
         </button>
 
         <button 
           type="button" 
-          class="nav-tab-btn flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold text-slate-300 hover:text-white"
+          class="nav-tab-btn flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold"
           data-tab="messages"
         >
           <i data-lucide="message-circle-heart" class="w-3.5 h-3.5"></i>
@@ -186,32 +191,32 @@
       <!-- ========================================================== -->
       <div id="tab-pane-links" class="tab-content-pane space-y-3.5">
         
-        <!-- CARD UTAMA: PORTAL WEB KELAS (PALING MENONJOL) -->
+        <!-- CARD UTAMA: PORTAL WEB KELAS (WARM BROWN GRADIENT) -->
         <a 
           href="https://kelas-hk-a-uinssc-2025.vercel.app" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="portal-highlight-card group block rounded-2xl p-4 text-left shadow-xl transition-transform hover:-translate-y-1 active:scale-[0.98]"
+          class="portal-highlight-card group block rounded-2xl p-4 text-left shadow-md transition-transform hover:-translate-y-1 active:scale-[0.98]"
         >
           <div class="flex items-center justify-between">
-            <span class="inline-flex items-center gap-1 rounded-full bg-emerald-400 px-2 py-0.5 text-[10px] font-bold text-slate-950 uppercase tracking-wider">
-              <span class="h-1.5 w-1.5 rounded-full bg-slate-950 animate-ping"></span>
+            <span class="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider border border-white/30">
+              <span class="h-1.5 w-1.5 rounded-full bg-amber-300 animate-ping"></span>
               Web Resmi
             </span>
-            <span class="text-xs font-semibold text-emerald-300 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+            <span class="text-xs font-semibold text-amber-200 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
               Buka Portal <i data-lucide="external-link" class="w-3 h-3"></i>
             </span>
           </div>
           
           <div class="mt-2.5 flex items-center gap-3.5">
-            <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 shadow-inner group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
+            <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 border border-white/30 text-white shadow-inner group-hover:bg-white group-hover:text-[#753e1f] transition-colors">
               <i data-lucide="globe" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+              <h3 class="text-base font-bold text-white">
                 Portal Resmi Web Kelas
               </h3>
-              <p class="text-xs text-slate-300 line-clamp-1">
+              <p class="text-xs text-amber-100/90 line-clamp-1 font-normal">
                 Presensi, 11 Mata Kuliah, Jadwal & Materi Kuliah
               </p>
             </div>
@@ -221,28 +226,28 @@
         <!-- CARD SHORTCUT: GALERI DOKUMENTASI FOTO -->
         <div 
           id="shortcut-to-gallery"
-          class="glass-card group block rounded-2xl p-3.5 text-left cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group block rounded-2xl p-3.5 text-left cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-slate-800/80 border border-white/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee7] border border-[#eddcd0] text-[#9d5f2f] group-hover:bg-[#9d5f2f] group-hover:text-white transition-colors">
                 <i data-lucide="images" class="w-5 h-5"></i>
               </div>
               <div>
                 <div class="flex items-center gap-1.5">
-                  <h3 class="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-[#9d5f2f] transition-colors">
                     Galeri Dokumentasi Foto
                   </h3>
-                  <span id="gallery-count-badge" class="rounded-full bg-emerald-500/20 px-1.5 py-0.2 text-[9px] font-bold text-emerald-300 border border-emerald-500/30">
+                  <span id="gallery-count-badge" class="rounded-full bg-[#f5eee7] px-2 py-0.5 text-[9px] font-bold text-[#753e1f] border border-[#eddcd0]">
                     Memuat...
                   </span>
                 </div>
-                <p class="text-xs text-slate-400 line-clamp-1">
+                <p class="text-xs text-[#8c7163] line-clamp-1">
                   Momen kuliah, acara kebersamaan, & kegiatan angkatan
                 </p>
               </div>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-1 group-hover:text-emerald-400 transition-all"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-1 group-hover:text-[#9d5f2f] transition-all"></i>
           </div>
         </div>
 
@@ -251,51 +256,51 @@
           href="https://instagram.com/chapterofushka" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="glass-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500/20 via-rose-500/20 to-purple-500/20 border border-rose-500/30 text-rose-400 group-hover:from-amber-500 group-hover:to-purple-600 group-hover:text-white transition-all">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-100 to-rose-100 border border-rose-200/60 text-rose-600 group-hover:from-rose-500 group-hover:to-purple-600 group-hover:text-white transition-all">
                 <i data-lucide="instagram" class="w-5 h-5"></i>
               </div>
               <div>
                 <div class="flex items-center gap-1.5">
-                  <h3 class="text-sm font-bold text-white group-hover:text-rose-300 transition-colors">
+                  <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-rose-600 transition-colors">
                     Instagram Kelas
                   </h3>
-                  <span class="rounded-full bg-rose-500/20 px-1.5 py-0.2 text-[9px] font-bold text-rose-300 border border-rose-500/30">
+                  <span class="rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-bold text-rose-600 border border-rose-200">
                     Official
                   </span>
                 </div>
-                <p class="text-xs text-slate-400 line-clamp-1">
+                <p class="text-xs text-[#8c7163] line-clamp-1">
                   @chapterofushka • Cerita & kenangan kita
                 </p>
               </div>
             </div>
-            <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-rose-400 transition-all"></i>
+            <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-rose-500 transition-all"></i>
           </div>
         </a>
 
         <!-- CARD SHORTCUT: KOTAK PESAN ANONIM / NGL -->
         <div 
           id="shortcut-to-messages"
-          class="glass-card group block rounded-2xl p-3.5 text-left cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group block rounded-2xl p-3.5 text-left cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-200 text-amber-700 group-hover:bg-amber-600 group-hover:text-white transition-colors">
                 <i data-lucide="message-square-heart" class="w-5 h-5"></i>
               </div>
               <div>
-                <h3 class="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+                <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-amber-700 transition-colors">
                   Kotak Pesan Anonim (NGL)
                 </h3>
-                <p class="text-xs text-slate-400 line-clamp-1">
+                <p class="text-xs text-[#8c7163] line-clamp-1">
                   Kirim saran, curhat, atau uneg-uneg rahasia
                 </p>
               </div>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-1 group-hover:text-indigo-400 transition-all"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-1 group-hover:text-amber-700 transition-all"></i>
           </div>
         </div>
 
@@ -304,23 +309,23 @@
           href="https://kelas-hk-a-uinssc-2025.vercel.app" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="glass-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
+              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee7] border border-[#eddcd0] text-[#753e1f] group-hover:bg-[#753e1f] group-hover:text-white transition-colors">
                 <i data-lucide="folder-git-2" class="w-5 h-5"></i>
               </div>
               <div>
-                <h3 class="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
+                <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-[#753e1f] transition-colors">
                   Repositori Materi & Tugas
                 </h3>
-                <p class="text-xs text-slate-400 line-clamp-1">
+                <p class="text-xs text-[#8c7163] line-clamp-1">
                   Akses RPS, modul, dan silabus Hukum Islam
                 </p>
               </div>
             </div>
-            <i data-lucide="external-link" class="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 group-hover:text-amber-400 transition-all"></i>
+            <i data-lucide="external-link" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-0.5 group-hover:text-[#753e1f] transition-all"></i>
           </div>
         </a>
 
@@ -334,18 +339,18 @@
         <!-- Header Galeri & Tombol Tambah Foto -->
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-base font-bold text-white flex items-center gap-1.5">
-              <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
+            <h2 class="text-base font-bold text-[#2c150c] flex items-center gap-1.5">
+              <i data-lucide="camera" class="w-4 h-4 text-[#9d5f2f]"></i>
               Galeri Dokumentasi
             </h2>
-            <p class="text-[11px] text-slate-400">Klik foto untuk melihat layar penuh</p>
+            <p class="text-[11px] text-[#8c7163]">Klik foto untuk melihat layar penuh</p>
           </div>
 
           <!-- Tombol Upload Foto (Muncul jika Admin login) -->
           <button 
             id="btn-upload-photo" 
             type="button" 
-            class="hidden inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-bold text-slate-950 shadow-md shadow-emerald-500/30 hover:bg-emerald-400 active:scale-95 transition-all"
+            class="hidden inline-flex items-center gap-1.5 rounded-full bg-[#9d5f2f] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#8c4e24] active:scale-95 transition-all"
           >
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
             <span>Tambah Foto</span>
@@ -358,20 +363,20 @@
         </div>
 
         <!-- Loader Indikator -->
-        <div id="gallery-loader" class="py-12 text-center text-slate-400">
-          <div class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent"></div>
-          <p class="mt-2 text-xs">Memuat galeri foto...</p>
+        <div id="gallery-loader" class="py-12 text-center text-[#8c7163]">
+          <div class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-[#9d5f2f] border-t-transparent"></div>
+          <p class="mt-2 text-xs font-medium">Memuat galeri foto...</p>
         </div>
 
         <!-- Grid Foto Galeri -->
-        <div id="gallery-grid" class="grid grid-cols-2 gap-2.5 sm:gap-3">
+        <div id="gallery-grid" class="grid grid-cols-2 gap-3">
           <!-- Foto-foto akan dirender secara dinamis oleh app.js -->
         </div>
 
         <!-- Empty State jika kategori kosong -->
-        <div id="gallery-empty" class="hidden rounded-2xl border border-white/10 bg-slate-900/50 py-12 text-center">
-          <i data-lucide="image-off" class="mx-auto h-8 w-8 text-slate-500"></i>
-          <p class="mt-2 text-xs font-medium text-slate-400">Belum ada foto dalam kategori ini.</p>
+        <div id="gallery-empty" class="hidden rounded-2xl border border-[#eddcd0] bg-white py-12 text-center shadow-xs">
+          <i data-lucide="image-off" class="mx-auto h-8 w-8 text-[#c89a7c]"></i>
+          <p class="mt-2 text-xs font-medium text-[#753e1f]">Belum ada foto dalam kategori ini.</p>
         </div>
 
       </div>
@@ -381,14 +386,14 @@
       <!-- ========================================================== -->
       <div id="tab-pane-messages" class="tab-content-pane hidden space-y-4">
         
-        <div class="glass-card rounded-2xl p-4 text-left">
+        <div class="warm-card rounded-2xl p-4 text-left">
           <div class="flex items-center gap-2.5 mb-2">
-            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-200">
               <i data-lucide="heart" class="w-4 h-4"></i>
             </span>
             <div>
-              <h2 class="text-sm font-bold text-white">Kirim Pesan Rahasia</h2>
-              <p class="text-[11px] text-slate-400">100% anonim, identitas Anda tidak akan tercatat</p>
+              <h2 class="text-sm font-bold text-[#2c150c]">Kirim Pesan Rahasia</h2>
+              <p class="text-[11px] text-[#8c7163]">100% anonim, identitas Anda tidak akan tercatat</p>
             </div>
           </div>
 
@@ -398,13 +403,13 @@
               rows="4" 
               required
               placeholder="Tulis kritik, saran untuk kelas, atau uneg-unegmu di sini..."
-              class="w-full rounded-xl border border-white/10 bg-slate-900/90 p-3 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
+              class="w-full rounded-xl border border-[#eddcd0] bg-[#fbf8f5] p-3 text-xs text-[#2c150c] placeholder-[#a69286] focus:border-[#9d5f2f] focus:outline-none focus:ring-1 focus:ring-[#9d5f2f] resize-none"
             ></textarea>
 
             <button 
               id="btn-submit-message" 
               type="submit" 
-              class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-emerald-950/40 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] transition-all"
+              class="w-full rounded-xl bg-gradient-to-r from-[#753e1f] to-[#9d5f2f] py-2.5 text-xs font-bold text-white shadow-sm hover:from-[#61331d] hover:to-[#8c4e24] active:scale-[0.98] transition-all"
             >
               Kirim Pesan Rahasia 🚀
             </button>
@@ -413,7 +418,7 @@
 
         <!-- Section Daftar Pesan (Hanya Terlihat untuk Admin) -->
         <div id="admin-messages-section" class="hidden space-y-2 text-left">
-          <h3 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+          <h3 class="text-xs font-bold text-[#753e1f] flex items-center gap-1.5">
             <i data-lucide="inbox" class="w-3.5 h-3.5"></i>
             Pesan Masuk (Khusus Admin):
           </h3>
@@ -429,11 +434,11 @@
     <!-- ========================================================== -->
     <!-- BAGIAN FOOTER                                              -->
     <!-- ========================================================== -->
-    <footer class="mt-8 text-center border-t border-white/10 pt-4 pb-2">
-      <p class="text-[11px] text-slate-400 font-medium">
-        © 2025 <span class="text-white font-semibold">Hukum Keluarga A</span> • UIN Siber Syekh Nurjati Cirebon
+    <footer class="mt-8 text-center border-t border-[#eddcd0] pt-4 pb-2">
+      <p class="text-[11px] text-[#753e1f] font-medium">
+        © 2025 <span class="text-[#2c150c] font-bold">Hukum Keluarga A</span> • UIN Siber Syekh Nurjati Cirebon
       </p>
-      <p class="mt-0.5 text-[10px] text-slate-400">
+      <p class="mt-0.5 text-[10px] text-[#8c7163]">
         Dikelola oleh Divisi Media & Informasi Angkatan HK A
       </p>
     </footer>
@@ -443,20 +448,20 @@
   <!-- ========================================================== -->
   <!-- MODAL 1: FULLSCREEN LIGHTBOX PHOTO VIEWER                  -->
   <!-- ========================================================== -->
-  <div id="modal-lightbox" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/90 backdrop-blur-md">
-    <div class="modal-content-box relative w-full max-w-lg rounded-3xl border border-white/10 bg-slate-900/95 p-4 shadow-2xl overflow-hidden">
+  <div id="modal-lightbox" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm">
+    <div class="modal-content-box relative w-full max-w-lg rounded-3xl border border-[#eddcd0] bg-white p-4 shadow-2xl overflow-hidden">
       
       <!-- Tombol Tutup -->
       <button 
         id="btn-close-lightbox" 
         type="button" 
-        class="absolute top-3 right-3 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-slate-800/80 text-white hover:bg-slate-700 active:scale-95 transition-all shadow-md"
+        class="absolute top-3 right-3 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-[#f5eee7] text-[#2c150c] hover:bg-[#eddcd0] active:scale-95 transition-all shadow-sm"
       >
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
 
       <!-- Gambar Resolusi Penuh -->
-      <div class="relative w-full overflow-hidden rounded-2xl bg-slate-950 shadow-inner max-h-[60vh] flex items-center justify-center">
+      <div class="relative w-full overflow-hidden rounded-2xl bg-stone-100 shadow-inner max-h-[60vh] flex items-center justify-center">
         <img 
           id="lightbox-img" 
           src="" 
@@ -469,25 +474,25 @@
       <div class="mt-3.5 text-left">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span id="lightbox-category" class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
+            <span id="lightbox-category" class="rounded-full bg-[#f5eee7] px-2.5 py-0.5 text-[10px] font-bold text-[#753e1f] border border-[#eddcd0]">
               Kategori
             </span>
-            <span id="lightbox-date" class="text-[11px] text-slate-400"></span>
+            <span id="lightbox-date" class="text-[11px] text-[#8c7163]"></span>
           </div>
 
           <!-- Tombol Unduh Foto -->
           <button 
             id="btn-download-photo" 
             type="button" 
-            class="flex items-center gap-1 text-[11px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+            class="flex items-center gap-1 text-[11px] font-bold text-[#9d5f2f] hover:text-[#753e1f] transition-colors"
           >
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
             <span>Unduh HD</span>
           </button>
         </div>
 
-        <h3 id="lightbox-title" class="mt-2 text-sm font-bold text-white"></h3>
-        <p id="lightbox-caption" class="mt-1 text-xs text-slate-300 leading-relaxed"></p>
+        <h3 id="lightbox-title" class="mt-2 text-sm font-bold text-[#2c150c]"></h3>
+        <p id="lightbox-caption" class="mt-1 text-xs text-[#753e1f] leading-relaxed"></p>
       </div>
 
     </div>
@@ -496,22 +501,22 @@
   <!-- ========================================================== -->
   <!-- MODAL 2: LOGIN ADMIN PENGURUS (PIN: 250825)                -->
   <!-- ========================================================== -->
-  <div id="modal-admin-login" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-    <div class="modal-content-box w-full max-w-xs rounded-3xl border border-white/10 bg-slate-900 p-5 shadow-2xl text-left">
+  <div id="modal-admin-login" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="modal-content-box w-full max-w-xs rounded-3xl border border-[#eddcd0] bg-white p-5 shadow-2xl text-left">
       
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <span class="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+          <span class="flex h-7 w-7 items-center justify-center rounded-xl bg-[#f5eee7] text-[#9d5f2f] border border-[#eddcd0]">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
           </span>
-          <h3 class="text-sm font-bold text-white">Admin Pengurus</h3>
+          <h3 class="text-sm font-bold text-[#2c150c]">Admin Pengurus</h3>
         </div>
-        <button id="btn-close-admin-modal" type="button" class="text-slate-400 hover:text-white">
+        <button id="btn-close-admin-modal" type="button" class="text-[#8c7163] hover:text-[#2c150c]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <p class="text-xs text-slate-400 mb-3">
+      <p class="text-xs text-[#753e1f] mb-3">
         Masukkan PIN keamanan pengurus untuk mengelola galeri foto.
       </p>
 
@@ -523,14 +528,14 @@
             maxlength="10" 
             placeholder="Ketik PIN..." 
             required 
-            class="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-center text-sm font-mono tracking-widest text-white placeholder-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            class="w-full rounded-xl border border-[#eddcd0] bg-[#fbf8f5] px-3 py-2 text-center text-sm font-mono tracking-widest text-[#2c150c] placeholder-[#a69286] focus:border-[#9d5f2f] focus:outline-none focus:ring-1 focus:ring-[#9d5f2f]"
           />
-          <p id="admin-pin-error" class="hidden mt-1.5 text-[11px] text-rose-400 font-medium text-center"></p>
+          <p id="admin-pin-error" class="hidden mt-1.5 text-[11px] text-rose-600 font-medium text-center"></p>
         </div>
 
         <button 
           type="submit" 
-          class="w-full rounded-xl bg-emerald-500 py-2 text-xs font-bold text-slate-950 hover:bg-emerald-400 active:scale-[0.98] transition-all shadow-md shadow-emerald-950/50"
+          class="w-full rounded-xl bg-[#9d5f2f] py-2 text-xs font-bold text-white hover:bg-[#8c4e24] active:scale-[0.98] transition-all shadow-sm"
         >
           Masuk Sekarang
         </button>
@@ -542,15 +547,15 @@
   <!-- ========================================================== -->
   <!-- MODAL 3: UPLOAD FOTO KE GALERI                             -->
   <!-- ========================================================== -->
-  <div id="modal-upload-photo" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-    <div class="modal-content-box w-full max-w-sm rounded-3xl border border-white/10 bg-slate-900 p-5 shadow-2xl text-left max-h-[90vh] overflow-y-auto">
+  <div id="modal-upload-photo" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="modal-content-box w-full max-w-sm rounded-3xl border border-[#eddcd0] bg-white p-5 shadow-2xl text-left max-h-[90vh] overflow-y-auto">
       
       <div class="flex items-center justify-between mb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
-          <i data-lucide="upload-cloud" class="w-4 h-4 text-emerald-400"></i>
+        <h3 class="text-sm font-bold text-[#2c150c] flex items-center gap-1.5">
+          <i data-lucide="upload-cloud" class="w-4 h-4 text-[#9d5f2f]"></i>
           Tambah Foto ke Galeri
         </h3>
-        <button id="btn-close-upload" type="button" class="text-slate-400 hover:text-white">
+        <button id="btn-close-upload" type="button" class="text-[#8c7163] hover:text-[#2c150c]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -559,26 +564,26 @@
         
         <!-- Dropzone / Input Foto -->
         <div>
-          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Pilih File Foto</label>
+          <label class="block text-[11px] font-semibold text-[#753e1f] mb-1">Pilih File Foto</label>
           <input type="file" id="upload-file-input" accept="image/*" class="hidden" />
           
           <div 
             id="upload-dropzone" 
             onclick="document.getElementById('upload-file-input').click()" 
-            class="cursor-pointer rounded-2xl border-2 border-dashed border-white/20 bg-slate-950/60 p-4 text-center hover:border-emerald-400 transition-colors"
+            class="cursor-pointer rounded-2xl border-2 border-dashed border-[#dfc2b0] bg-[#fbf8f5] p-4 text-center hover:border-[#9d5f2f] transition-colors"
           >
-            <i data-lucide="image-plus" class="mx-auto h-7 w-7 text-emerald-400 mb-1"></i>
-            <p class="text-xs font-medium text-slate-200">Ketuk untuk pilih dari galeri HP</p>
-            <p class="text-[10px] text-slate-500">JPG, PNG, atau WEBP</p>
+            <i data-lucide="image-plus" class="mx-auto h-7 w-7 text-[#9d5f2f] mb-1"></i>
+            <p class="text-xs font-semibold text-[#61331d]">Ketuk untuk pilih dari galeri HP</p>
+            <p class="text-[10px] text-[#8c7163]">JPG, PNG, atau WEBP</p>
           </div>
 
           <!-- Preview Gambar Terpilih -->
-          <div id="upload-preview-container" class="hidden relative rounded-xl overflow-hidden border border-emerald-500/30">
+          <div id="upload-preview-container" class="hidden relative rounded-xl overflow-hidden border border-[#dfc2b0]">
             <img id="upload-preview-img" src="" alt="Preview" class="w-full h-36 object-cover" />
             <button 
               type="button" 
               onclick="document.getElementById('upload-file-input').click()" 
-              class="absolute bottom-2 right-2 rounded-lg bg-slate-900/80 px-2 py-1 text-[10px] font-semibold text-white border border-white/20 hover:bg-slate-800"
+              class="absolute bottom-2 right-2 rounded-lg bg-[#2c150c]/80 px-2 py-1 text-[10px] font-semibold text-white hover:bg-[#2c150c]"
             >
               Ganti
             </button>
@@ -587,23 +592,23 @@
 
         <!-- Judul Foto -->
         <div>
-          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Judul Kegiatan</label>
+          <label class="block text-[11px] font-semibold text-[#753e1f] mb-1">Judul Kegiatan</label>
           <input 
             type="text" 
             id="upload-title" 
             required 
             placeholder="Contoh: Kuliah Tamu Hukum Syariah" 
-            class="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            class="w-full rounded-xl border border-[#eddcd0] bg-[#fbf8f5] px-3 py-2 text-xs text-[#2c150c] placeholder-[#a69286] focus:border-[#9d5f2f] focus:outline-none focus:ring-1 focus:ring-[#9d5f2f]"
           />
         </div>
 
         <!-- Kategori & Tanggal -->
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Kategori</label>
+            <label class="block text-[11px] font-semibold text-[#753e1f] mb-1">Kategori</label>
             <select 
               id="upload-category" 
-              class="w-full rounded-xl border border-white/10 bg-slate-950 px-2.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              class="w-full rounded-xl border border-[#eddcd0] bg-[#fbf8f5] px-2.5 py-2 text-xs text-[#2c150c] focus:border-[#9d5f2f] focus:outline-none focus:ring-1 focus:ring-[#9d5f2f]"
             >
               <option value="Kuliah">Kuliah</option>
               <option value="Momen Santai">Momen Santai</option>
@@ -613,31 +618,31 @@
           </div>
 
           <div>
-            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Tanggal</label>
+            <label class="block text-[11px] font-semibold text-[#753e1f] mb-1">Tanggal</label>
             <input 
               type="date" 
               id="upload-date" 
               required
-              class="w-full rounded-xl border border-white/10 bg-slate-950 px-2.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              class="w-full rounded-xl border border-[#eddcd0] bg-[#fbf8f5] px-2.5 py-2 text-xs text-[#2c150c] focus:border-[#9d5f2f] focus:outline-none focus:ring-1 focus:ring-[#9d5f2f]"
             />
           </div>
         </div>
 
         <!-- Keterangan / Caption -->
         <div>
-          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Keterangan / Cerita Singkat (Opsional)</label>
+          <label class="block text-[11px] font-semibold text-[#753e1f] mb-1">Keterangan / Cerita Singkat (Opsional)</label>
           <textarea 
             id="upload-caption" 
             rows="2" 
             placeholder="Tuliskan momen atau catatan penting..."
-            class="w-full rounded-xl border border-white/10 bg-slate-950 p-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
+            class="w-full rounded-xl border border-[#eddcd0] bg-[#fbf8f5] p-2.5 text-xs text-[#2c150c] placeholder-[#a69286] focus:border-[#9d5f2f] focus:outline-none focus:ring-1 focus:ring-[#9d5f2f] resize-none"
           ></textarea>
         </div>
 
         <button 
           id="btn-submit-upload" 
           type="submit" 
-          class="w-full rounded-xl bg-emerald-500 py-2.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 active:scale-[0.98] transition-all shadow-md shadow-emerald-950/50"
+          class="w-full rounded-xl bg-[#9d5f2f] py-2.5 text-xs font-bold text-white hover:bg-[#8c4e24] active:scale-[0.98] transition-all shadow-sm"
         >
           Unggah Foto Sekarang
         </button>
