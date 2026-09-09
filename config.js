@@ -36,6 +36,15 @@ const CONFIG = {
       badge: "Official",
       icon: "instagram",
     },
+    // TikTok Resmi Kelas
+    tiktok: {
+      title: "TikTok Resmi Kelas",
+      subtitle: "@chapterofushk_1a • Video & Tren Kampus",
+      url: "https://tiktok.com/@chapterofushk_1a", // <-- Ganti link akun TikTok di sini
+      handle: "@chapterofushk_1a", // <-- Ganti username TikTok di sini
+      badge: "Official",
+      icon: "tiktok",
+    },
     // Repositori Tugas & Dokumen
     repository: {
       title: "Arsip Tugas & Makalah",
