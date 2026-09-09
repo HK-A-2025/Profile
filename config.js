@@ -55,8 +55,8 @@ const CONFIG = {
   // 4. Kredensial Supabase (Opsional - Jika nanti sudah membuat akun Supabase)
   // Biarkan kosong untuk menggunakan penyimpanan lokal otomatis.
   supabase: {
-    url: "", // Contoh: "https://xyzcompany.supabase.co"
-    anonKey: "", // Kunci anon publik dari dashboard Supabase
+    url: "https://xjpkfdalokarxmbousvj.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcGtmZGFsb2thcnhtYm91c3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5OTM3MjksImV4cCI6MjEwMzU2OTcyOX0.ukLS09nUcqYzn9soXrNwngYRfK7hFPnzlH0wkOR69l8",
     bucketName: "gallery",
   },
 
