@@ -270,48 +270,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Navigasi Tab
+  // Navigasi Antar Halaman (Menu Utama, Galeri, dan Pesan)
   const setupTabs = () => {
-    const tabBtns = document.querySelectorAll('.nav-tab-btn');
     const tabContents = document.querySelectorAll('.tab-content-pane');
 
-    tabBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const targetTab = btn.getAttribute('data-tab');
-        state.activeTab = targetTab;
-
-        tabBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        tabContents.forEach((pane) => {
-          if (pane.id === `tab-pane-${targetTab}`) {
-            pane.classList.remove('hidden');
-          } else {
-            pane.classList.add('hidden');
-          }
-        });
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    const switchPane = (targetPaneId) => {
+      tabContents.forEach((pane) => {
+        if (pane.id === targetPaneId) {
+          pane.classList.remove('hidden');
+        } else {
+          pane.classList.add('hidden');
+        }
       });
-    });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-    // Tombol Shortcut dari Tab Links ke Galeri / Pesan
+    // Buka Galeri dari Menu Depan
     const shortcutGaleri = document.getElementById('shortcut-to-gallery');
     if (shortcutGaleri) {
       shortcutGaleri.addEventListener('click', (e) => {
         e.preventDefault();
-        const btn = document.querySelector('.nav-tab-btn[data-tab="gallery"]');
-        if (btn) btn.click();
+        switchPane('tab-pane-gallery');
       });
     }
 
+    // Buka Pesan dari Menu Depan
     const shortcutPesan = document.getElementById('shortcut-to-messages');
     if (shortcutPesan) {
       shortcutPesan.addEventListener('click', (e) => {
         e.preventDefault();
-        const btn = document.querySelector('.nav-tab-btn[data-tab="messages"]');
-        if (btn) btn.click();
+        switchPane('tab-pane-messages');
       });
+    }
+
+    // Tombol Kembali ke Menu Utama
+    document.querySelectorAll('.btn-back-to-home').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchPane('tab-pane-links');
+      });
+    });
+
+    // Pintasan Admin Banner
+    const adminGotoGaleri = document.getElementById('btn-admin-goto-gallery');
+    if (adminGotoGaleri) {
+      adminGotoGaleri.addEventListener('click', () => switchPane('tab-pane-gallery'));
+    }
+
+    const adminGotoPesan = document.getElementById('btn-admin-goto-messages');
+    if (adminGotoPesan) {
+      adminGotoPesan.addEventListener('click', () => switchPane('tab-pane-messages'));
+    }
+
+    // Hubungkan Link Google Drive dari config.js
+    const btnGdrive = document.getElementById('btn-gallery-gdrive');
+    if (
+      btnGdrive &&
+      window.CONFIG &&
+      window.CONFIG.links &&
+      window.CONFIG.links.gdrive &&
+      window.CONFIG.links.gdrive.url
+    ) {
+      btnGdrive.href = window.CONFIG.links.gdrive.url;
     }
   };
 

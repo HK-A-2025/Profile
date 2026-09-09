@@ -44,6 +44,13 @@ const CONFIG = {
       badge: "Drive",
       icon: "folder",
     },
+    // Google Drive Dokumentasi Asli (Full HD / Tanpa Kompresi)
+    gdrive: {
+      title: "Google Drive Dokumentasi HD",
+      subtitle: "Arsip foto & video asli resolusi penuh",
+      url: "https://drive.google.com", // Ganti dengan URL link Google Drive kelas Anda
+      badge: "HD Drive",
+    },
   },
 
   // 3. Keamanan Admin (Untuk Tambah & Hapus Foto)
