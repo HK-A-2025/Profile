@@ -386,11 +386,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxCategory = document.getElementById('lightbox-category');
   const lightboxDate = document.getElementById('lightbox-date');
   const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxIndexBadge = document.getElementById('lightbox-index-badge');
+  const btnLightboxPrev = document.getElementById('btn-lightbox-prev');
+  const btnLightboxNext = document.getElementById('btn-lightbox-next');
   const btnDownloadPhoto = document.getElementById('btn-download-photo');
   const btnCloseLightbox = document.getElementById('btn-close-lightbox');
 
+  // Dapatkan daftar media aktif sesuai kategori terpilih
+  const getActiveGalleryList = () => {
+    return state.activeCategory === 'Semua'
+      ? state.photos
+      : state.photos.filter((p) => p.category === state.activeCategory);
+  };
+
   const openLightbox = (photo) => {
     state.selectedPhoto = photo;
+    const currentList = getActiveGalleryList();
+    const foundIdx = currentList.findIndex((p) => p.id === photo.id);
+    state.lightboxIndex = foundIdx !== -1 ? foundIdx : 0;
+
     const isVideo =
       photo.mediaType === 'video' ||
       (photo.imageUrl &&
@@ -426,9 +440,58 @@ document.addEventListener('DOMContentLoaded', () => {
       lightboxCaption.textContent = photo.caption || '';
       lightboxCaption.style.display = photo.caption ? 'block' : 'none';
     }
+
+    // Perbarui Nomor Urut Media (contoh: 2 / 5)
+    if (lightboxIndexBadge) {
+      if (currentList.length > 1) {
+        lightboxIndexBadge.textContent = `${state.lightboxIndex + 1} / ${currentList.length}`;
+        lightboxIndexBadge.classList.remove('hidden');
+      } else {
+        lightboxIndexBadge.classList.add('hidden');
+      }
+    }
+
+    // Tampilkan tombol Prev/Next hanya jika ada lebih dari 1 media
+    if (btnLightboxPrev && btnLightboxNext) {
+      if (currentList.length <= 1) {
+        btnLightboxPrev.classList.add('hidden');
+        btnLightboxNext.classList.add('hidden');
+      } else {
+        btnLightboxPrev.classList.remove('hidden');
+        btnLightboxNext.classList.remove('hidden');
+      }
+    }
+
     if (lightboxModal) lightboxModal.classList.add('open');
     document.body.style.overflow = 'hidden';
   };
+
+  // Fungsi Pindah Media (Hanya saat tombol diklik - Tanpa usap/geser layar)
+  const navigateLightbox = (direction) => {
+    const list = getActiveGalleryList();
+    if (!list || list.length <= 1) return;
+
+    if (direction === 'next') {
+      state.lightboxIndex = (state.lightboxIndex + 1) % list.length;
+    } else if (direction === 'prev') {
+      state.lightboxIndex = (state.lightboxIndex - 1 + list.length) % list.length;
+    }
+    openLightbox(list[state.lightboxIndex]);
+  };
+
+  if (btnLightboxPrev) {
+    btnLightboxPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateLightbox('prev');
+    });
+  }
+
+  if (btnLightboxNext) {
+    btnLightboxNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateLightbox('next');
+    });
+  }
 
   const closeLightbox = () => {
     if (lightboxVideo) {

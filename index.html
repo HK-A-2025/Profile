@@ -461,7 +461,7 @@
           id="lightbox-img" 
           src="" 
           alt="Media Kegiatan HK A" 
-          class="h-auto max-h-[60vh] w-full object-contain"
+          class="h-auto max-h-[60vh] w-full object-contain select-none"
         />
         <video 
           id="lightbox-video" 
@@ -470,6 +470,26 @@
           playsinline 
           class="hidden h-auto max-h-[60vh] w-full rounded-2xl bg-black"
         ></video>
+
+        <!-- Tombol Navigasi Kiri (Sebelumnya) -->
+        <button 
+          id="btn-lightbox-prev" 
+          type="button" 
+          class="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/55 text-white hover:bg-black/80 active:scale-90 backdrop-blur-xs transition-all shadow-md"
+          title="Lihat Foto / Video Sebelumnya"
+        >
+          <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6 -ml-0.5"></i>
+        </button>
+
+        <!-- Tombol Navigasi Kanan (Selanjutnya) -->
+        <button 
+          id="btn-lightbox-next" 
+          type="button" 
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/55 text-white hover:bg-black/80 active:scale-90 backdrop-blur-xs transition-all shadow-md"
+          title="Lihat Foto / Video Selanjutnya"
+        >
+          <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6 -mr-0.5"></i>
+        </button>
       </div>
 
       <!-- Keterangan & Detail Foto -->
@@ -478,6 +498,9 @@
           <div class="flex items-center gap-2">
             <span id="lightbox-category" class="rounded-full bg-[#f5eee7] px-2.5 py-0.5 text-[10px] font-bold text-[#753e1f] border border-[#eddcd0]">
               Kategori
+            </span>
+            <span id="lightbox-index-badge" class="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#8c7163] border border-[#eddcd0]">
+              1 / 1
             </span>
             <span id="lightbox-date" class="text-[11px] text-[#8c7163]"></span>
           </div>
