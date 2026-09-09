@@ -346,6 +346,52 @@
           <!-- Kategori dirender oleh app.js -->
         </div>
 
+        <!-- Toolbar Kelola / Hapus Massal Foto (Khusus Mode Admin) -->
+        <div 
+          id="admin-batch-toolbar" 
+          class="hidden rounded-2xl border border-amber-200/90 bg-amber-50/90 p-3 shadow-xs transition-all text-left"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-2.5">
+            <!-- Checkbox Pilih Semua & Counter -->
+            <div class="flex items-center gap-2.5">
+              <label class="inline-flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-[#753e1f]">
+                <input 
+                  id="batch-select-all-checkbox" 
+                  type="checkbox" 
+                  class="h-4 w-4 rounded border-[#c89a7c] text-[#9d5f2f] focus:ring-[#9d5f2f] focus:ring-offset-0 cursor-pointer"
+                />
+                <span>Pilih Semua</span>
+              </label>
+              <span 
+                id="batch-selected-count-badge" 
+                class="rounded-full bg-white px-2.5 py-0.5 text-[11px] font-bold text-[#9d5f2f] border border-amber-200 shadow-xs"
+              >
+                0 dipilih
+              </span>
+            </div>
+
+            <!-- Tombol Aksi Hapus & Batal -->
+            <div class="flex items-center gap-2">
+              <button
+                id="btn-batch-deselect"
+                type="button"
+                class="hidden rounded-full border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-[#753e1f] hover:bg-amber-100 active:scale-95 transition-all shadow-xs"
+              >
+                Batal
+              </button>
+              <button
+                id="btn-batch-delete"
+                type="button"
+                disabled
+                class="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-3 py-1 text-xs font-bold text-white shadow-xs opacity-50 cursor-not-allowed transition-all"
+              >
+                <i data-lucide="trash-2" class="w-3.5 h-3.5 pointer-events-none"></i>
+                <span id="btn-batch-delete-text">Hapus Terpilih</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Loader Indikator -->
         <div id="gallery-loader" class="py-12 text-center text-[#8c7163]">
           <div class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-[#9d5f2f] border-t-transparent"></div>

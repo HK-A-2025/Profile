@@ -16,8 +16,32 @@ document.addEventListener('DOMContentLoaded', () => {
     photos: [],
     isAdmin: false,
     selectedPhoto: null,
+    selectedPhotoIds: new Set(),
+    lightboxIndex: 0,
     supabaseClient: null,
     pendingUploadFiles: [],
+  };
+
+  // Dapatkan daftar media aktif sesuai kategori terpilih
+  const getActiveGalleryList = () => {
+    return state.activeCategory === 'Semua'
+      ? state.photos
+      : state.photos.filter((p) => p.category === state.activeCategory);
+  };
+
+  // Ekstrak path file dari URL Supabase Storage untuk pembersihan storage
+  const getStoragePathFromUrl = (url) => {
+    if (!url || typeof url !== 'string') return null;
+    const bucket =
+      (window.CONFIG && window.CONFIG.supabase && window.CONFIG.supabase.bucketName) ||
+      'gallery';
+    const marker = `/${bucket}/`;
+    const idx = url.indexOf(marker);
+    if (idx !== -1) {
+      const rawPath = url.substring(idx + marker.length);
+      return decodeURIComponent(rawPath.split('?')[0]);
+    }
+    return null;
   };
 
   // Inisialisasi Supabase jika konfigurasi tersedia
@@ -56,20 +80,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAdminLogin = document.getElementById('btn-admin-login');
     const btnUploadPhoto = document.getElementById('btn-upload-photo');
     const adminMsgSection = document.getElementById('admin-messages-section');
+    const adminBatchToolbar = document.getElementById('admin-batch-toolbar');
 
     if (state.isAdmin) {
       if (adminBanner) adminBanner.classList.remove('hidden');
       if (btnAdminLogin) btnAdminLogin.classList.add('hidden');
       if (btnUploadPhoto) btnUploadPhoto.classList.remove('hidden');
       if (adminMsgSection) adminMsgSection.classList.remove('hidden');
+      if (adminBatchToolbar && state.photos.length > 0) {
+        adminBatchToolbar.classList.remove('hidden');
+      }
     } else {
       if (adminBanner) adminBanner.classList.add('hidden');
       if (btnAdminLogin) btnAdminLogin.classList.remove('hidden');
       if (btnUploadPhoto) btnUploadPhoto.classList.add('hidden');
       if (adminMsgSection) adminMsgSection.classList.add('hidden');
+      if (adminBatchToolbar) adminBatchToolbar.classList.add('hidden');
+      state.selectedPhotoIds.clear();
     }
 
     renderGallery();
+    updateBatchToolbar();
     if (state.isAdmin) {
       renderAdminMessages();
     }
@@ -150,6 +181,121 @@ document.addEventListener('DOMContentLoaded', () => {
     if (badgeTab) badgeTab.textContent = count;
   };
 
+  // Perbarui Toolbar Seleksi Massal Foto Admin
+  const updateBatchToolbar = () => {
+    const adminBatchToolbar = document.getElementById('admin-batch-toolbar');
+    const selectAllCheckbox = document.getElementById('batch-select-all-checkbox');
+    const badgeCount = document.getElementById('batch-selected-count-badge');
+    const btnDelete = document.getElementById('btn-batch-delete');
+    const btnDeleteText = document.getElementById('btn-batch-delete-text');
+    const btnDeselect = document.getElementById('btn-batch-deselect');
+
+    if (!adminBatchToolbar) return;
+
+    if (!state.isAdmin || state.photos.length === 0) {
+      adminBatchToolbar.classList.add('hidden');
+      return;
+    }
+
+    adminBatchToolbar.classList.remove('hidden');
+
+    const visiblePhotos = getActiveGalleryList();
+    const count = state.selectedPhotoIds.size;
+
+    if (badgeCount) {
+      badgeCount.textContent = `${count} dipilih`;
+      if (count > 0) {
+        badgeCount.className =
+          'rounded-full bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold text-rose-700 border border-rose-300 shadow-xs';
+      } else {
+        badgeCount.className =
+          'rounded-full bg-white px-2.5 py-0.5 text-[11px] font-bold text-[#9d5f2f] border border-amber-200 shadow-xs';
+      }
+    }
+
+    if (btnDeselect) {
+      if (count > 0) {
+        btnDeselect.classList.remove('hidden');
+      } else {
+        btnDeselect.classList.add('hidden');
+      }
+    }
+
+    if (btnDelete) {
+      if (count > 0) {
+        btnDelete.disabled = false;
+        btnDelete.classList.remove('opacity-50', 'cursor-not-allowed');
+        btnDelete.classList.add('hover:bg-rose-500', 'active:scale-95');
+        if (btnDeleteText) {
+          btnDeleteText.textContent = `Hapus (${count} Media)`;
+        }
+      } else {
+        btnDelete.disabled = true;
+        btnDelete.classList.add('opacity-50', 'cursor-not-allowed');
+        btnDelete.classList.remove('hover:bg-rose-500', 'active:scale-95');
+        if (btnDeleteText) {
+          btnDeleteText.textContent = 'Hapus Terpilih';
+        }
+      }
+    }
+
+    if (selectAllCheckbox && visiblePhotos.length > 0) {
+      const allSelected = visiblePhotos.every((p) => state.selectedPhotoIds.has(p.id));
+      const someSelected = visiblePhotos.some((p) => state.selectedPhotoIds.has(p.id));
+      selectAllCheckbox.checked = allSelected;
+      selectAllCheckbox.indeterminate = !allSelected && someSelected;
+    } else if (selectAllCheckbox) {
+      selectAllCheckbox.checked = false;
+      selectAllCheckbox.indeterminate = false;
+    }
+  };
+
+  // Perbarui visual item galeri tanpa reload DOM
+  const updateSelectionUI = () => {
+    const container = document.getElementById('gallery-grid');
+    if (!container) return;
+
+    container.querySelectorAll('.gallery-photo-item').forEach((card) => {
+      const id = card.getAttribute('data-id');
+      const isSelected = state.selectedPhotoIds.has(id);
+      const checkbox = card.querySelector('.photo-checkbox');
+      const checkboxBox = card.querySelector('.checkbox-box');
+      const selectWrapper = card.querySelector('.photo-select-wrapper');
+
+      if (checkbox) checkbox.checked = isSelected;
+      if (selectWrapper) {
+        selectWrapper.title = isSelected ? 'Batal pilih media ini' : 'Pilih media ini';
+      }
+
+      if (isSelected) {
+        card.classList.add('ring-2', 'ring-[#9d5f2f]', 'border-[#9d5f2f]');
+        card.classList.remove('border-[#eddcd0]');
+        if (checkboxBox) {
+          checkboxBox.className =
+            'checkbox-box flex h-7 w-7 items-center justify-center rounded-lg border-2 transition-all shadow-md bg-[#9d5f2f] border-[#9d5f2f] text-white ring-2 ring-white/90 scale-105';
+        }
+      } else {
+        card.classList.remove('ring-2', 'ring-[#9d5f2f]', 'border-[#9d5f2f]');
+        card.classList.add('border-[#eddcd0]');
+        if (checkboxBox) {
+          checkboxBox.className =
+            'checkbox-box flex h-7 w-7 items-center justify-center rounded-lg border-2 transition-all shadow-md bg-white/95 border-[#c89a7c]/80 text-transparent hover:border-[#9d5f2f] hover:bg-white backdrop-blur-xs';
+        }
+      }
+    });
+  };
+
+  // Toggle pilihan media satuan
+  const togglePhotoSelection = (id) => {
+    if (state.selectedPhotoIds.has(id)) {
+      state.selectedPhotoIds.delete(id);
+    } else {
+      state.selectedPhotoIds.add(id);
+    }
+    updateSelectionUI();
+    updateBatchToolbar();
+  };
+
   // Render Grid Galeri Foto
   const renderGallery = () => {
     const container = document.getElementById('gallery-grid');
@@ -157,14 +303,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     // Filter berdasarkan kategori aktif
-    const filtered =
-      state.activeCategory === 'Semua'
-        ? state.photos
-        : state.photos.filter((p) => p.category === state.activeCategory);
+    const filtered = getActiveGalleryList();
 
     if (filtered.length === 0) {
       container.innerHTML = '';
       if (emptyState) emptyState.classList.remove('hidden');
+      updateBatchToolbar();
       return;
     }
 
@@ -179,9 +323,14 @@ document.addEventListener('DOMContentLoaded', () => {
               photo.imageUrl.includes('.webm') ||
               photo.imageUrl.includes('.mov') ||
               photo.imageUrl.startsWith('data:video')));
+        const isSelected = state.selectedPhotoIds.has(photo.id);
 
         return `
-        <div class="gallery-photo-item group relative overflow-hidden rounded-2xl border border-[#eddcd0] bg-white shadow-xs hover:shadow-md cursor-pointer" data-id="${photo.id}">
+        <div class="gallery-photo-item group relative overflow-hidden rounded-2xl border ${
+          isSelected
+            ? 'border-[#9d5f2f] ring-2 ring-[#9d5f2f] shadow-md'
+            : 'border-[#eddcd0] bg-white shadow-xs hover:shadow-md'
+        } cursor-pointer transition-all" data-id="${photo.id}">
           <div class="aspect-square w-full overflow-hidden bg-[#f5eee7] relative flex items-center justify-center">
             ${
               isVideo
@@ -196,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i data-lucide="play" class="w-5 h-5 ml-0.5 fill-current"></i>
                   </div>
                 </div>
-                <span class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide bg-black/60 text-white backdrop-blur-xs border border-white/20">
+                <span class="absolute ${state.isAdmin ? 'top-11' : 'top-2.5'} left-2.5 z-10 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide bg-black/60 text-white backdrop-blur-xs border border-white/20 shadow-xs transition-all">
                   ▶ Video
                 </span>
               `
@@ -213,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <!-- Overlay Info Saat Hover / Mobile -->
-          <div class="photo-overlay absolute inset-0 bg-gradient-to-t from-[#2c150c]/90 via-[#2c150c]/40 to-transparent p-3.5 flex flex-col justify-end text-left opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div class="photo-overlay absolute inset-0 bg-gradient-to-t from-[#2c150c]/90 via-[#2c150c]/40 to-transparent p-3.5 flex flex-col justify-end text-left opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
             <div class="flex items-center gap-2 mb-1">
               <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-[#9d5f2f] text-white border border-[#8c4e24]">
                 ${isVideo ? '▶ ' : ''}${photo.category}
@@ -224,17 +373,44 @@ document.addEventListener('DOMContentLoaded', () => {
             ${photo.caption ? `<p class="text-[11px] text-[#f5eee7] line-clamp-1 mt-0.5">${photo.caption}</p>` : ''}
           </div>
 
-          <!-- Tombol Hapus Khusus Admin -->
+          <!-- Checkbox Centang Foto (Khusus Admin) -->
+          ${
+            state.isAdmin
+              ? `
+            <div class="photo-select-wrapper absolute top-2.5 left-2.5 z-20" title="${isSelected ? 'Batal pilih media ini' : 'Pilih media ini'}">
+              <label class="relative flex items-center justify-center cursor-pointer p-0.5 select-none">
+                <input 
+                  type="checkbox" 
+                  class="photo-checkbox sr-only" 
+                  data-id="${photo.id}" 
+                  ${isSelected ? 'checked' : ''}
+                />
+                <div class="checkbox-box flex h-7 w-7 items-center justify-center rounded-lg border-2 transition-all shadow-md ${
+                  isSelected 
+                    ? 'bg-[#9d5f2f] border-[#9d5f2f] text-white ring-2 ring-white/90 scale-105' 
+                    : 'bg-white/95 border-[#c89a7c]/80 text-transparent hover:border-[#9d5f2f] hover:bg-white backdrop-blur-xs'
+                }">
+                  <svg class="w-3.5 h-3.5 stroke-[3] fill-none stroke-current" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+              </label>
+            </div>
+          `
+              : ''
+          }
+
+          <!-- Tombol Hapus Satuan Khusus Admin -->
           ${
             state.isAdmin
               ? `
             <button 
               type="button"
-              class="btn-delete-photo absolute top-2.5 right-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-md hover:bg-rose-500 active:scale-95 transition-all"
+              class="btn-delete-photo absolute top-2.5 right-2.5 z-20 flex h-7 w-7 items-center justify-center rounded-lg bg-rose-600/90 text-white shadow-md hover:bg-rose-500 active:scale-95 transition-all backdrop-blur-xs"
               data-id="${photo.id}"
               title="Hapus media ini"
             >
-              <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+              <i data-lucide="trash-2" class="w-3.5 h-3.5 pointer-events-none"></i>
             </button>
           `
               : ''
@@ -249,18 +425,33 @@ document.addEventListener('DOMContentLoaded', () => {
       window.lucide.createIcons();
     }
 
+    // Pasang Event Listener Checkbox Pilih Foto (Khusus Admin)
+    container.querySelectorAll('.photo-select-wrapper').forEach((wrapper) => {
+      wrapper.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    container.querySelectorAll('.photo-checkbox').forEach((checkbox) => {
+      checkbox.addEventListener('change', (e) => {
+        e.stopPropagation();
+        const id = checkbox.getAttribute('data-id');
+        togglePhotoSelection(id);
+      });
+    });
+
     // Pasang Event Listener Click Foto untuk Lightbox
     container.querySelectorAll('.gallery-photo-item').forEach((item) => {
       item.addEventListener('click', (e) => {
-        // Jangan buka lightbox jika tombol hapus yang diklik
-        if (e.target.closest('.btn-delete-photo')) return;
+        // Jangan buka lightbox jika tombol hapus atau checkbox yang diklik
+        if (e.target.closest('.btn-delete-photo') || e.target.closest('.photo-select-wrapper')) return;
         const id = item.getAttribute('data-id');
         const photo = state.photos.find((p) => p.id === id);
         if (photo) openLightbox(photo);
       });
     });
 
-    // Pasang Event Listener Tombol Hapus
+    // Pasang Event Listener Tombol Hapus Satuan
     container.querySelectorAll('.btn-delete-photo').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -268,6 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmDeletePhoto(id);
       });
     });
+
+    updateBatchToolbar();
   };
 
   // Navigasi Antar Halaman (Menu Utama, Galeri, dan Pesan)
@@ -391,14 +584,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnLightboxNext = document.getElementById('btn-lightbox-next');
   const btnDownloadPhoto = document.getElementById('btn-download-photo');
   const btnCloseLightbox = document.getElementById('btn-close-lightbox');
-
-  // Dapatkan daftar media aktif sesuai kategori terpilih
-  const getActiveGalleryList = () => {
-    return state.activeCategory === 'Semua'
-      ? state.photos
-      : state.photos.filter((p) => p.category === state.activeCategory);
-  };
-
   const openLightbox = (photo) => {
     state.selectedPhoto = photo;
     const currentList = getActiveGalleryList();
@@ -948,14 +1133,128 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Hapus Foto
+  // Setup Aksi Seleksi Massal & Hapus Banyak Foto
+  const setupBatchManagement = () => {
+    const selectAllCheckbox = document.getElementById('batch-select-all-checkbox');
+    const btnDeselect = document.getElementById('btn-batch-deselect');
+    const btnDelete = document.getElementById('btn-batch-delete');
+
+    if (selectAllCheckbox) {
+      selectAllCheckbox.addEventListener('change', () => {
+        const visiblePhotos = getActiveGalleryList();
+        if (selectAllCheckbox.checked) {
+          visiblePhotos.forEach((p) => state.selectedPhotoIds.add(p.id));
+        } else {
+          visiblePhotos.forEach((p) => state.selectedPhotoIds.delete(p.id));
+        }
+        updateSelectionUI();
+        updateBatchToolbar();
+      });
+    }
+
+    if (btnDeselect) {
+      btnDeselect.addEventListener('click', () => {
+        state.selectedPhotoIds.clear();
+        updateSelectionUI();
+        updateBatchToolbar();
+      });
+    }
+
+    if (btnDelete) {
+      btnDelete.addEventListener('click', async () => {
+        const count = state.selectedPhotoIds.size;
+        if (count === 0 || !state.isAdmin) return;
+
+        const confirmAction = confirm(
+          `Apakah Anda yakin ingin menghapus ${count} media terpilih dari galeri?\nTindakan ini tidak dapat dibatalkan.`
+        );
+        if (!confirmAction) return;
+
+        const selectedIds = Array.from(state.selectedPhotoIds);
+        const originalHtml = btnDelete.innerHTML;
+
+        try {
+          btnDelete.disabled = true;
+          btnDelete.innerHTML = `
+            <div class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+            <span>Menghapus ${count}...</span>
+          `;
+
+          if (state.supabaseClient) {
+            // 1. Bersihkan file dari Supabase Storage jika berasal dari storage bucket
+            const storagePaths = [];
+            selectedIds.forEach((id) => {
+              const p = state.photos.find((photo) => photo.id === id);
+              if (p && p.imageUrl) {
+                const path = getStoragePathFromUrl(p.imageUrl);
+                if (path) storagePaths.push(path);
+              }
+            });
+
+            if (storagePaths.length > 0) {
+              try {
+                await state.supabaseClient.storage
+                  .from(window.CONFIG.supabase.bucketName || 'gallery')
+                  .remove(storagePaths);
+              } catch (err) {
+                console.warn('Gagal menghapus file dari storage bucket:', err);
+              }
+            }
+
+            // 2. Hapus baris dari tabel gallery_photos
+            const { error } = await state.supabaseClient
+              .from('gallery_photos')
+              .delete()
+              .in('id', selectedIds);
+
+            if (error) throw error;
+          }
+
+          // Hapus dari state lokal
+          const setDeleted = new Set(selectedIds);
+          state.photos = state.photos.filter((p) => !setDeleted.has(p.id));
+          state.selectedPhotoIds.clear();
+
+          savePhotosLocally();
+          updatePhotoCountBadge();
+          renderGallery();
+          updateBatchToolbar();
+          showToast(`Berhasil menghapus ${count} media sekaligus.`);
+        } catch (err) {
+          console.error('Gagal menghapus media massal:', err);
+          alert('Gagal menghapus media: ' + (err.message || 'Terjadi kesalahan'));
+        } finally {
+          if (btnDelete) {
+            btnDelete.disabled = state.selectedPhotoIds.size === 0;
+            btnDelete.innerHTML = originalHtml;
+          }
+        }
+      });
+    }
+  };
+
+  // Hapus Media Satuan
   const confirmDeletePhoto = async (photoId) => {
     if (!state.isAdmin) return;
-    const confirmAction = confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?');
+    const confirmAction = confirm('Apakah Anda yakin ingin menghapus media ini dari galeri?');
     if (!confirmAction) return;
 
     try {
       if (state.supabaseClient) {
+        const photo = state.photos.find((p) => p.id === photoId);
+        if (photo && photo.imageUrl) {
+          const path = getStoragePathFromUrl(photo.imageUrl);
+          if (path) {
+            try {
+              await state.supabaseClient.storage
+                .from(window.CONFIG.supabase.bucketName || 'gallery')
+                .remove([path]);
+            } catch (err) {
+              console.warn('Gagal menghapus file dari storage:', err);
+            }
+          }
+        }
+
         const { error } = await state.supabaseClient
           .from('gallery_photos')
           .delete()
@@ -965,13 +1264,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       state.photos = state.photos.filter((p) => p.id !== photoId);
+      state.selectedPhotoIds.delete(photoId);
       savePhotosLocally();
       updatePhotoCountBadge();
       renderGallery();
-      showToast('Foto berhasil dihapus.');
+      updateBatchToolbar();
+      showToast('Media berhasil dihapus.');
     } catch (err) {
-      console.error('Gagal menghapus foto:', err);
-      alert('Gagal menghapus foto: ' + err.message);
+      console.error('Gagal menghapus media:', err);
+      alert('Gagal menghapus media: ' + err.message);
     }
   };
 
@@ -1110,6 +1411,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSupabase();
   setupTabs();
   setupCategories();
+  setupBatchManagement();
   checkAdminAuth();
   loadPhotos();
 });
