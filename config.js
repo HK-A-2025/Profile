@@ -8,7 +8,7 @@ const CONFIG = {
   classInfo: {
     name: "Hukum Keluarga A 2025",
     shortName: "HK A 2025",
-    handle: "@chapterofushka",
+    handle: "@chapterofushk_1a",
     faculty: "Fakultas Syariah",
     university: "UIN Siber Syekh Nurjati Cirebon",
     year: "Angkatan 2025",
@@ -30,9 +30,9 @@ const CONFIG = {
     // Instagram Resmi Kelas
     instagram: {
       title: "Instagram Resmi Kelas",
-      subtitle: "@chapterofushka • Dokumentasi & Informasi",
-      url: "https://instagram.com/chapterofushka",
-      handle: "chapterofushka",
+      subtitle: "@chapterofushk_1a • Dokumentasi & Informasi",
+      url: "https://instagram.com/chapterofushk_1a",
+      handle: "chapterofushk_1a",
       badge: "Official",
       icon: "instagram",
     },

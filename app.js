@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     isAdmin: false,
     selectedPhoto: null,
     supabaseClient: null,
-    pendingUploadFile: null,
+    pendingUploadFiles: [],
   };
 
   // Inisialisasi Supabase jika konfigurasi tersedia
@@ -437,9 +437,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnUploadPhoto) {
     btnUploadPhoto.addEventListener('click', () => {
       if (formUploadPhoto) formUploadPhoto.reset();
-      state.pendingUploadFile = null;
-      if (previewContainer) previewContainer.classList.add('hidden');
-      if (dropZone) dropZone.classList.remove('hidden');
+      state.pendingUploadFiles = [];
+      renderUploadPreviews();
       // Set default date today
       const inputDate = document.getElementById('upload-date');
       if (inputDate) inputDate.value = new Date().toISOString().split('T')[0];
@@ -453,27 +452,90 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle Pilih File Foto & Preview
-  const handleFileSelection = (file) => {
-    if (!file || !file.type.startsWith('image/')) {
-      alert('Mohon pilih file gambar (JPG, PNG, atau WEBP).');
+  // Render Thumbnail Preview untuk Banyak Foto
+  const renderUploadPreviews = () => {
+    const previewContainer = document.getElementById('upload-preview-container');
+    const previewGrid = document.getElementById('upload-preview-grid');
+    const previewCountBadge = document.getElementById('preview-badge-count');
+    const topCountBadge = document.getElementById('upload-selected-count');
+    const dropZone = document.getElementById('upload-dropzone');
+
+    if (state.pendingUploadFiles.length === 0) {
+      if (previewContainer) previewContainer.classList.add('hidden');
+      if (dropZone) dropZone.classList.remove('hidden');
+      if (topCountBadge) topCountBadge.textContent = '';
       return;
     }
-    state.pendingUploadFile = file;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (previewImg) previewImg.src = e.target.result;
-      if (previewContainer) previewContainer.classList.remove('hidden');
-      if (dropZone) dropZone.classList.add('hidden');
-    };
-    reader.readAsDataURL(file);
+    if (previewContainer) previewContainer.classList.remove('hidden');
+    if (dropZone) dropZone.classList.add('hidden');
+
+    const total = state.pendingUploadFiles.length;
+    if (previewCountBadge) previewCountBadge.textContent = `${total} foto dipilih`;
+    if (topCountBadge) topCountBadge.textContent = `${total} foto`;
+
+    if (previewGrid) {
+      previewGrid.innerHTML = state.pendingUploadFiles
+        .map(
+          (item, idx) => `
+        <div class="relative group aspect-square rounded-xl overflow-hidden border border-[#dfc2b0] bg-white shadow-xs">
+          <img src="${item.previewUrl}" class="w-full h-full object-cover" />
+          <button 
+            type="button" 
+            class="btn-remove-pending absolute top-1 right-1 h-5 w-5 rounded-full bg-slate-900/80 text-white flex items-center justify-center text-[10px] hover:bg-rose-600 transition-colors shadow-xs"
+            data-id="${item.id}"
+            title="Hapus foto ini"
+          >
+            ✕
+          </button>
+          <span class="absolute bottom-1 left-1 px-1 rounded bg-black/60 text-[9px] text-white font-mono">
+            #${idx + 1}
+          </span>
+        </div>
+      `
+        )
+        .join('');
+
+      previewGrid.querySelectorAll('.btn-remove-pending').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute('data-id');
+          const removed = state.pendingUploadFiles.find((item) => item.id === id);
+          if (removed && removed.previewUrl) URL.revokeObjectURL(removed.previewUrl);
+          state.pendingUploadFiles = state.pendingUploadFiles.filter((item) => item.id !== id);
+          renderUploadPreviews();
+        });
+      });
+    }
+  };
+
+  // Handle Pilih File Banyak Foto
+  const handleFilesSelection = (filesList) => {
+    if (!filesList || filesList.length === 0) return;
+    const newFiles = Array.from(filesList).filter((f) => f.type.startsWith('image/'));
+    if (newFiles.length === 0) {
+      alert('Mohon pilih file gambar yang valid (JPG, PNG, atau WEBP).');
+      return;
+    }
+
+    newFiles.forEach((file) => {
+      const previewUrl = URL.createObjectURL(file);
+      state.pendingUploadFiles.push({
+        id: 'f_' + Math.random().toString(36).substring(2, 9),
+        file,
+        previewUrl,
+      });
+    });
+
+    renderUploadPreviews();
   };
 
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        handleFileSelection(e.target.files[0]);
+      if (e.target.files && e.target.files.length > 0) {
+        handleFilesSelection(e.target.files);
+        // Reset input file value agar bisa pilih file yang sama jika diperlukan
+        e.target.value = '';
       }
     });
   }
@@ -482,117 +544,135 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dropZone) {
     dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
-      dropZone.classList.add('border-emerald-400', 'bg-emerald-950/20');
+      dropZone.classList.add('border-[#9d5f2f]', 'bg-[#f5eee7]');
     });
     dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('border-emerald-400', 'bg-emerald-950/20');
+      dropZone.classList.remove('border-[#9d5f2f]', 'bg-[#f5eee7]');
     });
     dropZone.addEventListener('drop', (e) => {
       e.preventDefault();
-      dropZone.classList.remove('border-emerald-400', 'bg-emerald-950/20');
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-        handleFileSelection(e.dataTransfer.files[0]);
+      dropZone.classList.remove('border-[#9d5f2f]', 'bg-[#f5eee7]');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFilesSelection(e.dataTransfer.files);
       }
     });
   }
 
-  // Submit Upload Foto
+  // Submit Upload Foto (Bisa Banyak Sekaligus)
   if (formUploadPhoto) {
     formUploadPhoto.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!state.pendingUploadFile) {
-        alert('Silakan pilih foto terlebih dahulu!');
+      if (!state.pendingUploadFiles || state.pendingUploadFiles.length === 0) {
+        alert('Silakan pilih minimal 1 foto terlebih dahulu!');
         return;
       }
 
-      const title = document.getElementById('upload-title').value.trim();
+      const baseTitle = document.getElementById('upload-title').value.trim();
       const category = document.getElementById('upload-category').value;
       const date = document.getElementById('upload-date').value;
       const caption = document.getElementById('upload-caption').value.trim();
 
-      if (!title) {
+      if (!baseTitle) {
         alert('Mohon isi judul foto kegiatan.');
         return;
       }
 
+      const total = state.pendingUploadFiles.length;
       if (btnSubmitUpload) {
         btnSubmitUpload.disabled = true;
-        btnSubmitUpload.innerHTML = `
-          <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent inline-block mr-2"></div>
-          Menyimpan Foto...
-        `;
       }
 
       try {
-        let finalImageUrl = '';
+        for (let i = 0; i < total; i++) {
+          const item = state.pendingUploadFiles[i];
+          const currentTitle = total === 1 ? baseTitle : `${baseTitle} (${i + 1})`;
 
-        // JIKA SUPABASE TERSEDIA: Upload ke Storage & Simpan ke DB
-        if (state.supabaseClient) {
-          const fileExt = state.pendingUploadFile.name.split('.').pop() || 'jpg';
-          const fileName = `hk_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-          const filePath = `${fileName}`;
+          if (btnSubmitUpload) {
+            btnSubmitUpload.innerHTML = `
+              <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent inline-block mr-2"></div>
+              Mengunggah ${i + 1} dari ${total} foto...
+            `;
+          }
 
-          // 1. Upload ke Storage Bucket
-          const { error: uploadErr } = await state.supabaseClient.storage
-            .from(window.CONFIG.supabase.bucketName || 'gallery')
-            .upload(filePath, state.pendingUploadFile, {
-              cacheControl: '3600',
-              upsert: false,
+          if (state.supabaseClient) {
+            const fileExt = item.file.name.split('.').pop() || 'jpg';
+            const fileName = `hk_${Date.now()}_${Math.random().toString(36).substring(2, 8)}_${i}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // 1. Upload ke Supabase Storage Bucket
+            const { error: uploadErr } = await state.supabaseClient.storage
+              .from(window.CONFIG.supabase.bucketName || 'gallery')
+              .upload(filePath, item.file, {
+                cacheControl: '3600',
+                upsert: false,
+              });
+
+            if (uploadErr) throw uploadErr;
+
+            // 2. Dapatkan Public URL
+            const { data: publicUrlData } = state.supabaseClient.storage
+              .from(window.CONFIG.supabase.bucketName || 'gallery')
+              .getPublicUrl(filePath);
+
+            const finalImageUrl = publicUrlData.publicUrl;
+
+            // 3. Simpan baris ke tabel gallery_photos
+            const newRow = {
+              title: currentTitle,
+              category,
+              date,
+              caption,
+              image_url: finalImageUrl,
+            };
+
+            const { data: insertData, error: insertErr } = await state.supabaseClient
+              .from('gallery_photos')
+              .insert([newRow])
+              .select();
+
+            if (insertErr) throw insertErr;
+
+            if (insertData && insertData[0]) {
+              state.photos.unshift({
+                id: insertData[0].id,
+                title: insertData[0].title,
+                category: insertData[0].category,
+                date: insertData[0].date,
+                imageUrl: insertData[0].image_url,
+                caption: insertData[0].caption,
+              });
+            }
+          } else {
+            // Mode Lokal: Konversi ke Base64
+            const base64Url = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (ev) => resolve(ev.target.result);
+              reader.readAsDataURL(item.file);
             });
 
-          if (uploadErr) throw uploadErr;
-
-          // 2. Dapatkan Public URL
-          const { data: publicUrlData } = state.supabaseClient.storage
-            .from(window.CONFIG.supabase.bucketName || 'gallery')
-            .getPublicUrl(filePath);
-
-          finalImageUrl = publicUrlData.publicUrl;
-
-          // 3. Simpan baris ke tabel gallery_photos
-          const newRow = {
-            title,
-            category,
-            date,
-            caption,
-            image_url: finalImageUrl,
-          };
-
-          const { data: insertData, error: insertErr } = await state.supabaseClient
-            .from('gallery_photos')
-            .insert([newRow])
-            .select();
-
-          if (insertErr) throw insertErr;
-
-          // Tambahkan ke state
-          if (insertData && insertData[0]) {
             state.photos.unshift({
-              id: insertData[0].id,
-              title: insertData[0].title,
-              category: insertData[0].category,
-              date: insertData[0].date,
-              imageUrl: insertData[0].image_url,
-              caption: insertData[0].caption,
+              id: 'local_' + Date.now() + '_' + i,
+              title: currentTitle,
+              category,
+              date,
+              caption,
+              imageUrl: base64Url,
             });
           }
-        } else {
-          // MODE LOKAL: Gunakan Base64 data URL
-          const base64Url = previewImg.src;
-          const newPhoto = {
-            id: 'local_' + Date.now(),
-            title,
-            category,
-            date,
-            caption,
-            imageUrl: base64Url,
-          };
-          state.photos.unshift(newPhoto);
+        }
+
+        if (!state.supabaseClient) {
           savePhotosLocally();
         }
 
+        // Bersihkan blob URLs
+        state.pendingUploadFiles.forEach((item) => {
+          if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+        });
+        state.pendingUploadFiles = [];
+
         if (modalUpload) modalUpload.classList.remove('open');
-        showToast('Foto berhasil ditambahkan ke galeri!');
+        showToast(`Berhasil mengunggah ${total} foto ke galeri!`);
         updatePhotoCountBadge();
         renderGallery();
       } catch (error) {

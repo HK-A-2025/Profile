@@ -137,13 +137,13 @@
         </h1>
 
         <a 
-          href="https://instagram.com/chapterofushka" 
+          href="https://instagram.com/chapterofushk_1a" 
           target="_blank" 
           rel="noopener noreferrer"
           class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[#9d5f2f] hover:text-[#753e1f] transition-colors"
         >
           <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
-          <span>@chapterofushka</span>
+          <span>@chapterofushk_1a</span>
         </a>
 
         <p class="mt-1.5 text-xs text-[#753e1f] font-medium">
@@ -253,7 +253,7 @@
 
         <!-- CARD: INSTAGRAM RESMI KELAS -->
         <a 
-          href="https://instagram.com/chapterofushka" 
+          href="https://instagram.com/chapterofushk_1a" 
           target="_blank" 
           rel="noopener noreferrer"
           class="warm-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
@@ -273,7 +273,7 @@
                   </span>
                 </div>
                 <p class="text-xs text-[#8c7163] line-clamp-1">
-                  @chapterofushka • Cerita & kenangan kita
+                  @chapterofushk_1a • Cerita & kenangan kita
                 </p>
               </div>
             </div>
@@ -562,31 +562,39 @@
 
       <form id="form-upload-photo" class="space-y-3">
         
-        <!-- Dropzone / Input Foto -->
+        <!-- Dropzone / Input Foto (Mendukung Banyak Foto Sekaligus) -->
         <div>
-          <label class="block text-[11px] font-semibold text-[#753e1f] mb-1">Pilih File Foto</label>
-          <input type="file" id="upload-file-input" accept="image/*" class="hidden" />
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold text-[#753e1f]">Pilih Foto (Bisa Banyak Sekaligus)</label>
+            <span id="upload-selected-count" class="text-[10px] font-bold text-[#9d5f2f]"></span>
+          </div>
+          <input type="file" id="upload-file-input" accept="image/*" multiple class="hidden" />
           
           <div 
             id="upload-dropzone" 
             onclick="document.getElementById('upload-file-input').click()" 
             class="cursor-pointer rounded-2xl border-2 border-dashed border-[#dfc2b0] bg-[#fbf8f5] p-4 text-center hover:border-[#9d5f2f] transition-colors"
           >
-            <i data-lucide="image-plus" class="mx-auto h-7 w-7 text-[#9d5f2f] mb-1"></i>
-            <p class="text-xs font-semibold text-[#61331d]">Ketuk untuk pilih dari galeri HP</p>
-            <p class="text-[10px] text-[#8c7163]">JPG, PNG, atau WEBP</p>
+            <i data-lucide="images" class="mx-auto h-7 w-7 text-[#9d5f2f] mb-1"></i>
+            <p class="text-xs font-semibold text-[#61331d]">Pilih Foto dari Galeri HP / Komputer</p>
+            <p class="text-[10px] text-[#8c7163] mt-0.5">Bisa pilih 1 atau banyak foto sekaligus (JPG, PNG, WEBP)</p>
           </div>
 
-          <!-- Preview Gambar Terpilih -->
-          <div id="upload-preview-container" class="hidden relative rounded-xl overflow-hidden border border-[#dfc2b0]">
-            <img id="upload-preview-img" src="" alt="Preview" class="w-full h-36 object-cover" />
-            <button 
-              type="button" 
-              onclick="document.getElementById('upload-file-input').click()" 
-              class="absolute bottom-2 right-2 rounded-lg bg-[#2c150c]/80 px-2 py-1 text-[10px] font-semibold text-white hover:bg-[#2c150c]"
-            >
-              Ganti
-            </button>
+          <!-- Preview Gambar Terpilih (Grid Multi-Foto) -->
+          <div id="upload-preview-container" class="hidden mt-2 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span id="preview-badge-count" class="text-[11px] font-bold text-[#61331d]">0 foto dipilih</span>
+              <button 
+                type="button" 
+                onclick="document.getElementById('upload-file-input').click()" 
+                class="rounded-lg bg-[#f5eee7] px-2 py-0.5 text-[10px] font-semibold text-[#753e1f] border border-[#eddcd0] hover:bg-[#eddcd0]"
+              >
+                + Tambah / Ubah
+              </button>
+            </div>
+            <div id="upload-preview-grid" class="grid grid-cols-4 gap-1.5 max-h-36 overflow-y-auto p-1.5 bg-[#fbf8f5] rounded-xl border border-[#dfc2b0]">
+              <!-- Thumbnails dirender dinamis oleh app.js -->
+            </div>
           </div>
         </div>
 
