@@ -1,0 +1,187 @@
+/* ==========================================================
+   GAYA VISUAL KHAS HUKUM KELUARGA A 2025
+   Emerald Dark Glassmorphism — Mobile-First & Responsive
+   ========================================================== */
+
+:root {
+  --primary-emerald: #10b981;
+  --primary-emerald-dark: #059669;
+  --accent-gold: #f59e0b;
+  --bg-deep: #090e17;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(16, 185, 129, 0.3);
+}
+
+/* Base Body Styles */
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-deep);
+  color: #f1f5f9;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ambient Islamic Geometric Glow Background */
+.ambient-glow {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 10% 40%, rgba(245, 158, 11, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 70%, rgba(6, 95, 70, 0.12) 0%, transparent 50%);
+}
+
+/* Mesh Grid Subtle Pattern */
+.bg-mesh-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 14px 35px -10px rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Primary Highlight Link Card (Portal Web) */
+.portal-highlight-card {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1.5px solid rgba(52, 211, 153, 0.4);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-highlight-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  animation: shine 4s infinite linear;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(50%); }
+}
+
+/* Avatar Border Glow Pulse */
+.avatar-glow {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 0 25px rgba(16, 185, 129, 0.35);
+  animation: pulseAvatar 3s ease-in-out infinite;
+}
+
+@keyframes pulseAvatar {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 0 20px rgba(16, 185, 129, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4), 0 0 30px rgba(245, 158, 11, 0.45);
+  }
+}
+
+/* Tab Navigation */
+.nav-tab-btn {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.nav-tab-btn.active {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.nav-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #34d399, transparent);
+  border-radius: 9999px;
+}
+
+/* Photo Card Aspect & Hover */
+.gallery-photo-item {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.gallery-photo-item:hover {
+  transform: translateY(-4px);
+}
+
+.gallery-photo-item:hover .photo-overlay {
+  opacity: 1;
+}
+
+/* Lightbox Modal Animation */
+.modal-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content-box {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.modal-backdrop.open .modal-content-box {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Hide scrollbar for category pills */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar for Page */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090e17;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
