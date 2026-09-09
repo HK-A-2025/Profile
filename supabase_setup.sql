@@ -2,10 +2,6 @@
 -- SKEMA SUPABASE UNTUK GALERI & PESAN KELAS HK A 2025
 -- Fakultas Syariah — UIN Siber Syekh Nurjati Cirebon
 -- ==========================================================
--- Petunjuk:
--- 1. Buka dashboard Supabase Anda -> menu "SQL Editor".
--- 2. Salin dan tempel seluruh teks SQL ini, lalu klik tombol "Run".
--- ==========================================================
 
 -- 1. Tabel Foto Galeri
 CREATE TABLE IF NOT EXISTS public.gallery_photos (
@@ -29,40 +25,32 @@ CREATE TABLE IF NOT EXISTS public.anonymous_messages (
 ALTER TABLE public.gallery_photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.anonymous_messages ENABLE ROW LEVEL SECURITY;
 
--- 4. Kebijakan Akses (RLS Policies)
--- Semua orang bisa melihat foto di galeri
-CREATE POLICY "Public read gallery_photos" 
-  ON public.gallery_photos FOR SELECT USING (true);
+-- 4. Kebijakan Akses (Idempotent: Aman dijalankan berulang)
+DROP POLICY IF EXISTS "Public read gallery_photos" ON public.gallery_photos;
+CREATE POLICY "Public read gallery_photos" ON public.gallery_photos FOR SELECT USING (true);
 
--- Pengurus kelas dapat menambah dan menghapus foto
-CREATE POLICY "Public insert gallery_photos" 
-  ON public.gallery_photos FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Public insert gallery_photos" ON public.gallery_photos;
+CREATE POLICY "Public insert gallery_photos" ON public.gallery_photos FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Public delete gallery_photos" 
-  ON public.gallery_photos FOR DELETE USING (true);
+DROP POLICY IF EXISTS "Public delete gallery_photos" ON public.gallery_photos;
+CREATE POLICY "Public delete gallery_photos" ON public.gallery_photos FOR DELETE USING (true);
 
--- Semua orang bisa mengirim pesan anonim
-CREATE POLICY "Public insert anonymous_messages" 
-  ON public.anonymous_messages FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Public insert anonymous_messages" ON public.anonymous_messages;
+CREATE POLICY "Public insert anonymous_messages" ON public.anonymous_messages FOR INSERT WITH CHECK (true);
 
--- Semua orang bisa membaca pesan anonim (atau hanya admin)
-CREATE POLICY "Public read anonymous_messages" 
-  ON public.anonymous_messages FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public read anonymous_messages" ON public.anonymous_messages;
+CREATE POLICY "Public read anonymous_messages" ON public.anonymous_messages FOR SELECT USING (true);
 
--- 5. Buat Storage Bucket untuk File Foto Galeri
+-- 5. Storage Bucket untuk File Foto Galeri
 INSERT INTO storage.buckets (id, name, public) 
-VALUES ('gallery', 'gallery', true)
+VALUES ('gallery', 'gallery', true) 
 ON CONFLICT (id) DO NOTHING;
 
--- Kebijakan Akses Storage Bucket 'gallery'
-CREATE POLICY "Public read gallery storage" 
-  ON storage.objects FOR SELECT 
-  USING (bucket_id = 'gallery');
+DROP POLICY IF EXISTS "Public read gallery storage" ON storage.objects;
+CREATE POLICY "Public read gallery storage" ON storage.objects FOR SELECT USING (bucket_id = 'gallery');
 
-CREATE POLICY "Public upload gallery storage" 
-  ON storage.objects FOR INSERT 
-  WITH CHECK (bucket_id = 'gallery');
+DROP POLICY IF EXISTS "Public upload gallery storage" ON storage.objects;
+CREATE POLICY "Public upload gallery storage" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'gallery');
 
-CREATE POLICY "Public delete gallery storage" 
-  ON storage.objects FOR DELETE 
-  USING (bucket_id = 'gallery');
+DROP POLICY IF EXISTS "Public delete gallery storage" ON storage.objects;
+CREATE POLICY "Public delete gallery storage" ON storage.objects FOR DELETE USING (bucket_id = 'gallery');
