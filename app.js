@@ -527,15 +527,11 @@ document.addEventListener('DOMContentLoaded', () => {
       btnGdrive.href = window.CONFIG.links.gdrive.url;
     }
 
-    // Hubungkan Link & Username TikTok dari config.js
+    // Hubungkan Link TikTok dari config.js (teks tampilan mengikuti index.html)
     const linkTiktok = document.getElementById('link-card-tiktok');
-    const textTiktok = document.getElementById('tiktok-display-text');
     if (window.CONFIG && window.CONFIG.links && window.CONFIG.links.tiktok) {
       if (linkTiktok && window.CONFIG.links.tiktok.url) {
         linkTiktok.href = window.CONFIG.links.tiktok.url;
-      }
-      if (textTiktok && window.CONFIG.links.tiktok.handle) {
-        textTiktok.textContent = `TikTok ${window.CONFIG.links.tiktok.handle}`;
       }
     }
   };
