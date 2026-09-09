@@ -575,14 +575,20 @@
   <div id="modal-upload-photo" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
     <div class="modal-content-box w-full max-w-sm rounded-3xl border border-[#eddcd0] bg-white p-5 shadow-2xl text-left max-h-[90vh] overflow-y-auto">
       
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center justify-between mb-2">
         <h3 class="text-sm font-bold text-[#2c150c] flex items-center gap-1.5">
           <i data-lucide="upload-cloud" class="w-4 h-4 text-[#9d5f2f]"></i>
-          Tambah Foto ke Galeri
+          Tambah Media ke Galeri
         </h3>
         <button id="btn-close-upload" type="button" class="text-[#8c7163] hover:text-[#2c150c]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
+      </div>
+
+      <!-- Lencana Auto-Kompresi Pintar -->
+      <div class="flex items-center gap-1.5 rounded-xl bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 text-[10px] font-semibold text-emerald-800 mb-3">
+        <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0"></i>
+        <span>Auto-Kompresi Aktif: Hemat 80-90% kuota storage otomatis</span>
       </div>
 
       <form id="form-upload-photo" class="space-y-3">

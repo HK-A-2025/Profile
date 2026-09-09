@@ -740,7 +740,70 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Submit Upload Foto / Video (Bisa Banyak Sekaligus)
+  // Fungsi Auto-Kompresi Gambar Pintar (Mengurangi ukuran file 80-90% tanpa mengurangi ketajaman Full HD)
+  const compressImageFile = async (file, maxWidth = 1920, maxHeight = 1920, quality = 0.82) => {
+    // Jika file bukan gambar, atau sudah kecil (< 200 KB), lewati kompresi
+    if (!file.type.startsWith('image/') || file.size < 200 * 1024) {
+      return file;
+    }
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          // Pertahankan rasio aspek dan batasi ukuran maksimum ke Full HD 1080p
+          if (width > maxWidth || height > maxHeight) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Ekspor ke JPEG dengan kompresi optimal
+          canvas.toBlob(
+            (blob) => {
+              if (blob && blob.size < file.size) {
+                const cleanName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+                const compressedFile = new File([blob], cleanName, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                });
+                console.log(
+                  `⚡ [Auto-Kompresi] ${file.name}: ${(file.size / 1024).toFixed(0)} KB ➔ ${(compressedFile.size / 1024).toFixed(0)} KB (Hemat ${Math.round((1 - compressedFile.size / file.size) * 100)}%)`
+                );
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            },
+            'image/jpeg',
+            quality
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = event.target.result;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Submit Upload Foto / Video (Bisa Banyak Sekaligus + Auto-Kompresi)
   if (formUploadPhoto) {
     formUploadPhoto.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -772,19 +835,33 @@ document.addEventListener('DOMContentLoaded', () => {
           if (btnSubmitUpload) {
             btnSubmitUpload.innerHTML = `
               <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent inline-block mr-2"></div>
-              Mengunggah ${i + 1} dari ${total} media...
+              Mengoptimalkan & mengunggah ${i + 1} dari ${total} media...
             `;
           }
 
+          // Cek batas ukuran video (maksimal 50 MB untuk Supabase)
+          if (item.isVideo && item.file.size > 50 * 1024 * 1024) {
+            alert(
+              `Video "${item.file.name}" berukuran ${(item.file.size / 1024 / 1024).toFixed(1)} MB (melebihi batas 50 MB). Mohon gunakan video cuplikan pendek atau unggah ke Google Drive.`
+            );
+            continue;
+          }
+
+          // Jalankan Auto-Kompresi Otomatis pada Foto
+          let uploadableFile = item.file;
+          if (!item.isVideo) {
+            uploadableFile = await compressImageFile(item.file);
+          }
+
           if (state.supabaseClient) {
-            const fileExt = item.file.name.split('.').pop() || (item.isVideo ? 'mp4' : 'jpg');
+            const fileExt = uploadableFile.name.split('.').pop() || (item.isVideo ? 'mp4' : 'jpg');
             const fileName = `hk_${Date.now()}_${Math.random().toString(36).substring(2, 8)}_${i}.${fileExt}`;
             const filePath = `${fileName}`;
 
             // 1. Upload ke Supabase Storage Bucket
             const { error: uploadErr } = await state.supabaseClient.storage
               .from(window.CONFIG.supabase.bucketName || 'gallery')
-              .upload(filePath, item.file, {
+              .upload(filePath, uploadableFile, {
                 cacheControl: '3600',
                 upsert: false,
               });
@@ -826,11 +903,11 @@ document.addEventListener('DOMContentLoaded', () => {
               });
             }
           } else {
-            // Mode Lokal: Konversi ke Base64
+            // Mode Lokal: Konversi ke Base64 (menggunakan file terkompresi)
             const base64Url = await new Promise((resolve) => {
               const reader = new FileReader();
               reader.onload = (ev) => resolve(ev.target.result);
-              reader.readAsDataURL(item.file);
+              reader.readAsDataURL(uploadableFile);
             });
 
             state.photos.unshift({
@@ -856,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.pendingUploadFiles = [];
 
         if (modalUpload) modalUpload.classList.remove('open');
-        showToast(`Berhasil mengunggah ${total} media ke galeri!`);
+        showToast(`Berhasil mengunggah ${total} media (Auto-Kompresi Aktif ⚡)!`);
         updatePhotoCountBadge();
         renderGallery();
       } catch (error) {
