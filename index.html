@@ -187,68 +187,42 @@
       </div>
 
       <!-- ========================================================== -->
-      <!-- TAB PANE 1: TAUTAN UTAMA (BIO-LINK CARDS)                   -->
+      <!-- TAB PANE 1: TAUTAN UTAMA (BERSIH & MINIMALIS)              -->
       <!-- ========================================================== -->
-      <div id="tab-pane-links" class="tab-content-pane space-y-3.5">
+      <div id="tab-pane-links" class="tab-content-pane space-y-2.5">
         
-        <!-- CARD UTAMA: PORTAL WEB KELAS (WARM BROWN GRADIENT) -->
+        <!-- CARD UTAMA: PORTAL WEB KELAS -->
         <a 
           href="https://kelas-hk-a-uinssc-2025.vercel.app" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="portal-highlight-card group block rounded-2xl p-4 text-left shadow-md transition-transform hover:-translate-y-1 active:scale-[0.98]"
+          class="portal-highlight-card group flex items-center justify-between rounded-2xl px-4 py-3.5 shadow-sm transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
-          <div class="flex items-center justify-between">
-            <span class="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider border border-white/30">
-              <span class="h-1.5 w-1.5 rounded-full bg-amber-300 animate-ping"></span>
-              Web Resmi
-            </span>
-            <span class="text-xs font-semibold text-amber-200 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-              Buka Portal <i data-lucide="external-link" class="w-3 h-3"></i>
-            </span>
-          </div>
-          
-          <div class="mt-2.5 flex items-center gap-3.5">
-            <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 border border-white/30 text-white shadow-inner group-hover:bg-white group-hover:text-[#753e1f] transition-colors">
-              <i data-lucide="globe" class="w-6 h-6"></i>
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 text-white">
+              <i data-lucide="globe" class="w-5 h-5"></i>
             </div>
-            <div>
-              <h3 class="text-base font-bold text-white">
-                Portal Resmi Web Kelas
-              </h3>
-              <p class="text-xs text-amber-100/90 line-clamp-1 font-normal">
-                Presensi, 11 Mata Kuliah, Jadwal & Materi Kuliah
-              </p>
-            </div>
+            <span class="text-sm font-bold text-white tracking-wide">Portal Resmi Web Kelas</span>
           </div>
+          <span class="flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
+            Buka <i data-lucide="external-link" class="w-3 h-3"></i>
+          </span>
         </a>
 
-        <!-- CARD SHORTCUT: GALERI DOKUMENTASI FOTO -->
+        <!-- CARD: GALERI DOKUMENTASI FOTO & VIDEO -->
         <div 
           id="shortcut-to-gallery"
-          class="warm-card group block rounded-2xl p-3.5 text-left cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group flex items-center justify-between rounded-2xl px-4 py-3.5 cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee7] border border-[#eddcd0] text-[#9d5f2f] group-hover:bg-[#9d5f2f] group-hover:text-white transition-colors">
-                <i data-lucide="images" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <div class="flex items-center gap-1.5">
-                  <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-[#9d5f2f] transition-colors">
-                    Galeri Dokumentasi Foto
-                  </h3>
-                  <span id="gallery-count-badge" class="rounded-full bg-[#f5eee7] px-2 py-0.5 text-[9px] font-bold text-[#753e1f] border border-[#eddcd0]">
-                    Memuat...
-                  </span>
-                </div>
-                <p class="text-xs text-[#8c7163] line-clamp-1">
-                  Momen kuliah, acara kebersamaan, & kegiatan angkatan
-                </p>
-              </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee7] text-[#9d5f2f] group-hover:bg-[#9d5f2f] group-hover:text-white transition-colors">
+              <i data-lucide="images" class="w-5 h-5"></i>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-1 group-hover:text-[#9d5f2f] transition-all"></i>
+            <span class="text-sm font-bold text-[#2c150c] group-hover:text-[#9d5f2f] transition-colors">Galeri Dokumentasi</span>
           </div>
+          <span id="gallery-count-badge" class="rounded-full bg-[#f5eee7] px-2.5 py-1 text-[10px] font-bold text-[#753e1f] border border-[#eddcd0]">
+            Memuat...
+          </span>
         </div>
 
         <!-- CARD: INSTAGRAM RESMI KELAS -->
@@ -256,52 +230,29 @@
           href="https://instagram.com/chapterofushk_1a" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="warm-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group flex items-center justify-between rounded-2xl px-4 py-3.5 transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-100 to-rose-100 border border-rose-200/60 text-rose-600 group-hover:from-rose-500 group-hover:to-purple-600 group-hover:text-white transition-all">
-                <i data-lucide="instagram" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <div class="flex items-center gap-1.5">
-                  <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-rose-600 transition-colors">
-                    Instagram Kelas
-                  </h3>
-                  <span class="rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-bold text-rose-600 border border-rose-200">
-                    Official
-                  </span>
-                </div>
-                <p class="text-xs text-[#8c7163] line-clamp-1">
-                  @chapterofushk_1a • Cerita & kenangan kita
-                </p>
-              </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+              <i data-lucide="instagram" class="w-5 h-5"></i>
             </div>
-            <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-rose-500 transition-all"></i>
+            <span class="text-sm font-bold text-[#2c150c] group-hover:text-rose-600 transition-colors">Instagram @chapterofushk_1a</span>
           </div>
+          <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#c89a7c] group-hover:text-rose-500 transition-colors"></i>
         </a>
 
-        <!-- CARD SHORTCUT: KOTAK PESAN ANONIM / NGL -->
+        <!-- CARD: KOTAK PESAN ANONIM (NGL) -->
         <div 
           id="shortcut-to-messages"
-          class="warm-card group block rounded-2xl p-3.5 text-left cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group flex items-center justify-between rounded-2xl px-4 py-3.5 cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-200 text-amber-700 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <i data-lucide="message-square-heart" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-amber-700 transition-colors">
-                  Kotak Pesan Anonim (NGL)
-                </h3>
-                <p class="text-xs text-[#8c7163] line-clamp-1">
-                  Kirim saran, curhat, atau uneg-uneg rahasia
-                </p>
-              </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+              <i data-lucide="message-square-heart" class="w-5 h-5"></i>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-1 group-hover:text-amber-700 transition-all"></i>
+            <span class="text-sm font-bold text-[#2c150c] group-hover:text-amber-700 transition-colors">Kirim Pesan Rahasia</span>
           </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-1 group-hover:text-amber-700 transition-all"></i>
         </div>
 
         <!-- CARD: ARSIP TUGAS & REPOSITORI MAKALAH -->
@@ -309,24 +260,15 @@
           href="https://kelas-hk-a-uinssc-2025.vercel.app" 
           target="_blank" 
           rel="noopener noreferrer"
-          class="warm-card group block rounded-2xl p-3.5 text-left transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+          class="warm-card group flex items-center justify-between rounded-2xl px-4 py-3.5 transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee7] border border-[#eddcd0] text-[#753e1f] group-hover:bg-[#753e1f] group-hover:text-white transition-colors">
-                <i data-lucide="folder-git-2" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <h3 class="text-sm font-bold text-[#2c150c] group-hover:text-[#753e1f] transition-colors">
-                  Repositori Materi & Tugas
-                </h3>
-                <p class="text-xs text-[#8c7163] line-clamp-1">
-                  Akses RPS, modul, dan silabus Hukum Islam
-                </p>
-              </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee7] text-[#753e1f] group-hover:bg-[#753e1f] group-hover:text-white transition-colors">
+              <i data-lucide="folder-git-2" class="w-5 h-5"></i>
             </div>
-            <i data-lucide="external-link" class="w-4 h-4 text-[#c89a7c] group-hover:translate-x-0.5 group-hover:text-[#753e1f] transition-all"></i>
+            <span class="text-sm font-bold text-[#2c150c] group-hover:text-[#753e1f] transition-colors">Arsip Tugas & Materi Kuliah</span>
           </div>
+          <i data-lucide="external-link" class="w-4 h-4 text-[#c89a7c] group-hover:text-[#753e1f] transition-colors"></i>
         </a>
 
       </div>
@@ -336,28 +278,28 @@
       <!-- ========================================================== -->
       <div id="tab-pane-gallery" class="tab-content-pane hidden space-y-4">
         
-        <!-- Header Galeri & Tombol Tambah Foto -->
+        <!-- Header Galeri & Tombol Tambah Media -->
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-base font-bold text-[#2c150c] flex items-center gap-1.5">
               <i data-lucide="camera" class="w-4 h-4 text-[#9d5f2f]"></i>
               Galeri Dokumentasi
             </h2>
-            <p class="text-[11px] text-[#8c7163]">Klik foto untuk melihat layar penuh</p>
+            <p class="text-[11px] text-[#8c7163]">Klik foto atau video untuk melihat layar penuh</p>
           </div>
 
-          <!-- Tombol Upload Foto (Muncul jika Admin login) -->
+          <!-- Tombol Upload Media (Muncul jika Admin login) -->
           <button 
             id="btn-upload-photo" 
             type="button" 
             class="hidden inline-flex items-center gap-1.5 rounded-full bg-[#9d5f2f] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#8c4e24] active:scale-95 transition-all"
           >
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
-            <span>Tambah Foto</span>
+            <span>Tambah Media</span>
           </button>
         </div>
 
-        <!-- Filter Kategori Foto (Scrollable Pills) -->
+        <!-- Filter Kategori Media (Scrollable Pills) -->
         <div id="category-filters" class="no-scrollbar flex items-center gap-1.5 overflow-x-auto pb-1">
           <!-- Kategori dirender oleh app.js -->
         </div>
@@ -365,18 +307,18 @@
         <!-- Loader Indikator -->
         <div id="gallery-loader" class="py-12 text-center text-[#8c7163]">
           <div class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-[#9d5f2f] border-t-transparent"></div>
-          <p class="mt-2 text-xs font-medium">Memuat galeri foto...</p>
+          <p class="mt-2 text-xs font-medium">Memuat galeri media...</p>
         </div>
 
-        <!-- Grid Foto Galeri -->
+        <!-- Grid Media Galeri -->
         <div id="gallery-grid" class="grid grid-cols-2 gap-3">
-          <!-- Foto-foto akan dirender secara dinamis oleh app.js -->
+          <!-- Foto/video akan dirender secara dinamis oleh app.js -->
         </div>
 
         <!-- Empty State jika kategori kosong -->
         <div id="gallery-empty" class="hidden rounded-2xl border border-[#eddcd0] bg-white py-12 text-center shadow-xs">
           <i data-lucide="image-off" class="mx-auto h-8 w-8 text-[#c89a7c]"></i>
-          <p class="mt-2 text-xs font-medium text-[#753e1f]">Belum ada foto dalam kategori ini.</p>
+          <p class="mt-2 text-xs font-medium text-[#753e1f]">Belum ada media dalam kategori ini.</p>
         </div>
 
       </div>
@@ -460,14 +402,21 @@
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
 
-      <!-- Gambar Resolusi Penuh -->
+      <!-- Gambar / Video Resolusi Penuh -->
       <div class="relative w-full overflow-hidden rounded-2xl bg-stone-100 shadow-inner max-h-[60vh] flex items-center justify-center">
         <img 
           id="lightbox-img" 
           src="" 
-          alt="Foto Kegiatan HK A" 
+          alt="Media Kegiatan HK A" 
           class="h-auto max-h-[60vh] w-full object-contain"
         />
+        <video 
+          id="lightbox-video" 
+          src="" 
+          controls 
+          playsinline 
+          class="hidden h-auto max-h-[60vh] w-full rounded-2xl bg-black"
+        ></video>
       </div>
 
       <!-- Keterangan & Detail Foto -->
@@ -565,25 +514,25 @@
         <!-- Dropzone / Input Foto (Mendukung Banyak Foto Sekaligus) -->
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="block text-[11px] font-semibold text-[#753e1f]">Pilih Foto (Bisa Banyak Sekaligus)</label>
+            <label class="block text-[11px] font-semibold text-[#753e1f]">Pilih Foto atau Video (Bisa Banyak Sekaligus)</label>
             <span id="upload-selected-count" class="text-[10px] font-bold text-[#9d5f2f]"></span>
           </div>
-          <input type="file" id="upload-file-input" accept="image/*" multiple class="hidden" />
+          <input type="file" id="upload-file-input" accept="image/*,video/*" multiple class="hidden" />
           
           <div 
             id="upload-dropzone" 
             onclick="document.getElementById('upload-file-input').click()" 
             class="cursor-pointer rounded-2xl border-2 border-dashed border-[#dfc2b0] bg-[#fbf8f5] p-4 text-center hover:border-[#9d5f2f] transition-colors"
           >
-            <i data-lucide="images" class="mx-auto h-7 w-7 text-[#9d5f2f] mb-1"></i>
-            <p class="text-xs font-semibold text-[#61331d]">Pilih Foto dari Galeri HP / Komputer</p>
-            <p class="text-[10px] text-[#8c7163] mt-0.5">Bisa pilih 1 atau banyak foto sekaligus (JPG, PNG, WEBP)</p>
+            <i data-lucide="video" class="mx-auto h-7 w-7 text-[#9d5f2f] mb-1"></i>
+            <p class="text-xs font-semibold text-[#61331d]">Pilih Foto atau Video dari HP / Komputer</p>
+            <p class="text-[10px] text-[#8c7163] mt-0.5">Mendukung Foto (JPG, PNG) & Video (MP4, MOV)</p>
           </div>
 
           <!-- Preview Gambar Terpilih (Grid Multi-Foto) -->
           <div id="upload-preview-container" class="hidden mt-2 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span id="preview-badge-count" class="text-[11px] font-bold text-[#61331d]">0 foto dipilih</span>
+              <span id="preview-badge-count" class="text-[11px] font-bold text-[#61331d]">0 file dipilih</span>
               <button 
                 type="button" 
                 onclick="document.getElementById('upload-file-input').click()" 
@@ -652,7 +601,7 @@
           type="submit" 
           class="w-full rounded-xl bg-[#9d5f2f] py-2.5 text-xs font-bold text-white hover:bg-[#8c4e24] active:scale-[0.98] transition-all shadow-sm"
         >
-          Unggah Foto Sekarang
+          Unggah Media Sekarang
         </button>
 
       </form>

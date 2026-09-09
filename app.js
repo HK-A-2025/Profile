@@ -89,14 +89,22 @@ document.addEventListener('DOMContentLoaded', () => {
           .order('created_at', { ascending: false });
 
         if (!error && data && data.length > 0) {
-          state.photos = data.map((item) => ({
-            id: item.id,
-            title: item.title,
-            category: item.category || 'Kuliah',
-            date: item.date || new Date(item.created_at).toISOString().split('T')[0],
-            imageUrl: item.image_url,
-            caption: item.caption || '',
-          }));
+          state.photos = data.map((item) => {
+            const isVideo =
+              item.media_type === 'video' ||
+              (item.image_url &&
+                (/\.(mp4|webm|mov|ogg|m4v)(\?.*)?$/i.test(item.image_url) ||
+                  item.image_url.startsWith('data:video')));
+            return {
+              id: item.id,
+              title: item.title,
+              category: item.category || 'Kuliah',
+              date: item.date || new Date(item.created_at).toISOString().split('T')[0],
+              imageUrl: item.image_url,
+              caption: item.caption || '',
+              mediaType: isVideo ? 'video' : 'image',
+            };
+          });
           if (galleryLoader) galleryLoader.classList.add('hidden');
           updatePhotoCountBadge();
           renderGallery();
@@ -133,12 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Perbarui Badge Total Foto
+  // Perbarui Badge Total Media (Foto & Video)
   const updatePhotoCountBadge = () => {
     const badge = document.getElementById('gallery-count-badge');
     const badgeTab = document.getElementById('gallery-tab-count');
     const count = state.photos.length;
-    if (badge) badge.textContent = `${count} Foto`;
+    if (badge) badge.textContent = `${count} Media`;
     if (badgeTab) badgeTab.textContent = count;
   };
 
@@ -163,24 +171,52 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emptyState) emptyState.classList.add('hidden');
 
     container.innerHTML = filtered
-      .map(
-        (photo) => `
+      .map((photo) => {
+        const isVideo =
+          photo.mediaType === 'video' ||
+          (photo.imageUrl &&
+            (photo.imageUrl.includes('.mp4') ||
+              photo.imageUrl.includes('.webm') ||
+              photo.imageUrl.includes('.mov') ||
+              photo.imageUrl.startsWith('data:video')));
+
+        return `
         <div class="gallery-photo-item group relative overflow-hidden rounded-2xl border border-[#eddcd0] bg-white shadow-xs hover:shadow-md cursor-pointer" data-id="${photo.id}">
-          <div class="aspect-square w-full overflow-hidden bg-[#f5eee7]">
-            <img 
-              src="${photo.imageUrl}" 
-              alt="${photo.title}" 
-              loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              onerror="this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop'"
-            />
+          <div class="aspect-square w-full overflow-hidden bg-[#f5eee7] relative flex items-center justify-center">
+            ${
+              isVideo
+                ? `
+                <video 
+                  src="${photo.imageUrl}" 
+                  preload="metadata"
+                  class="h-full w-full object-cover pointer-events-none"
+                ></video>
+                <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/35 transition-colors">
+                  <div class="h-10 w-10 rounded-full bg-white/90 text-[#753e1f] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <i data-lucide="play" class="w-5 h-5 ml-0.5 fill-current"></i>
+                  </div>
+                </div>
+                <span class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide bg-black/60 text-white backdrop-blur-xs border border-white/20">
+                  ▶ Video
+                </span>
+              `
+                : `
+                <img 
+                  src="${photo.imageUrl}" 
+                  alt="${photo.title}" 
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  onerror="this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop'"
+                />
+              `
+            }
           </div>
 
           <!-- Overlay Info Saat Hover / Mobile -->
           <div class="photo-overlay absolute inset-0 bg-gradient-to-t from-[#2c150c]/90 via-[#2c150c]/40 to-transparent p-3.5 flex flex-col justify-end text-left opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div class="flex items-center gap-2 mb-1">
               <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-[#9d5f2f] text-white border border-[#8c4e24]">
-                ${photo.category}
+                ${isVideo ? '▶ ' : ''}${photo.category}
               </span>
               <span class="text-[11px] text-[#eddcd0]">${photo.date || ''}</span>
             </div>
@@ -196,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
               type="button"
               class="btn-delete-photo absolute top-2.5 right-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-md hover:bg-rose-500 active:scale-95 transition-all"
               data-id="${photo.id}"
-              title="Hapus Foto Ini"
+              title="Hapus media ini"
             >
               <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
             </button>
@@ -204,8 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
               : ''
           }
         </div>
-      `
-      )
+      `;
+      })
       .join('');
 
     // Re-trigger icon creation
@@ -310,9 +346,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Lightbox Modal Handler
+  // Lightbox Modal Handler (Mendukung Foto & Video)
   const lightboxModal = document.getElementById('modal-lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxVideo = document.getElementById('lightbox-video');
   const lightboxTitle = document.getElementById('lightbox-title');
   const lightboxCategory = document.getElementById('lightbox-category');
   const lightboxDate = document.getElementById('lightbox-date');
@@ -322,9 +359,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const openLightbox = (photo) => {
     state.selectedPhoto = photo;
-    if (lightboxImg) lightboxImg.src = photo.imageUrl;
+    const isVideo =
+      photo.mediaType === 'video' ||
+      (photo.imageUrl &&
+        (photo.imageUrl.includes('.mp4') ||
+          photo.imageUrl.includes('.webm') ||
+          photo.imageUrl.includes('.mov') ||
+          photo.imageUrl.startsWith('data:video')));
+
+    if (isVideo) {
+      if (lightboxImg) lightboxImg.classList.add('hidden');
+      if (lightboxVideo) {
+        lightboxVideo.classList.remove('hidden');
+        lightboxVideo.src = photo.imageUrl;
+        lightboxVideo.play().catch(() => {});
+      }
+    } else {
+      if (lightboxVideo) {
+        lightboxVideo.pause();
+        lightboxVideo.src = '';
+        lightboxVideo.classList.add('hidden');
+      }
+      if (lightboxImg) {
+        lightboxImg.classList.remove('hidden');
+        lightboxImg.src = photo.imageUrl;
+      }
+    }
+
     if (lightboxTitle) lightboxTitle.textContent = photo.title;
-    if (lightboxCategory) lightboxCategory.textContent = photo.category;
+    if (lightboxCategory)
+      lightboxCategory.textContent = isVideo ? `▶ Video • ${photo.category}` : photo.category;
     if (lightboxDate) lightboxDate.textContent = photo.date || '';
     if (lightboxCaption) {
       lightboxCaption.textContent = photo.caption || '';
@@ -335,6 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const closeLightbox = () => {
+    if (lightboxVideo) {
+      lightboxVideo.pause();
+      lightboxVideo.src = '';
+    }
     if (lightboxModal) lightboxModal.classList.remove('open');
     document.body.style.overflow = '';
   };
@@ -348,17 +416,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Tombol Download Foto di Lightbox
+  // Tombol Download Media di Lightbox
   if (btnDownloadPhoto) {
     btnDownloadPhoto.addEventListener('click', async () => {
       if (!state.selectedPhoto) return;
+      const isVideo =
+        state.selectedPhoto.mediaType === 'video' ||
+        (state.selectedPhoto.imageUrl &&
+          (state.selectedPhoto.imageUrl.includes('.mp4') ||
+            state.selectedPhoto.imageUrl.includes('.webm') ||
+            state.selectedPhoto.imageUrl.includes('.mov') ||
+            state.selectedPhoto.imageUrl.startsWith('data:video')));
+
+      const ext = isVideo ? 'mp4' : 'jpg';
+
       try {
         const response = await fetch(state.selectedPhoto.imageUrl);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = `HK-A-2025_${state.selectedPhoto.title.replace(/\s+/g, '_')}.jpg`;
+        a.download = `HK-A-2025_${state.selectedPhoto.title.replace(/\s+/g, '_')}.${ext}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -471,20 +549,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dropZone) dropZone.classList.add('hidden');
 
     const total = state.pendingUploadFiles.length;
-    if (previewCountBadge) previewCountBadge.textContent = `${total} foto dipilih`;
-    if (topCountBadge) topCountBadge.textContent = `${total} foto`;
+    if (previewCountBadge) previewCountBadge.textContent = `${total} file dipilih`;
+    if (topCountBadge) topCountBadge.textContent = `${total} file`;
 
     if (previewGrid) {
       previewGrid.innerHTML = state.pendingUploadFiles
         .map(
           (item, idx) => `
-        <div class="relative group aspect-square rounded-xl overflow-hidden border border-[#dfc2b0] bg-white shadow-xs">
-          <img src="${item.previewUrl}" class="w-full h-full object-cover" />
+        <div class="relative group aspect-square rounded-xl overflow-hidden border border-[#dfc2b0] bg-stone-900 shadow-xs flex items-center justify-center">
+          ${
+            item.isVideo
+              ? `<video src="${item.previewUrl}" class="w-full h-full object-cover pointer-events-none"></video>
+                 <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-[#9d5f2f] text-[8px] font-bold text-white shadow-xs">▶ Video</span>`
+              : `<img src="${item.previewUrl}" class="w-full h-full object-cover" />`
+          }
           <button 
             type="button" 
             class="btn-remove-pending absolute top-1 right-1 h-5 w-5 rounded-full bg-slate-900/80 text-white flex items-center justify-center text-[10px] hover:bg-rose-600 transition-colors shadow-xs"
             data-id="${item.id}"
-            title="Hapus foto ini"
+            title="Hapus media ini"
           >
             ✕
           </button>
@@ -509,21 +592,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Handle Pilih File Banyak Foto
+  // Handle Pilih File Banyak Foto / Video
   const handleFilesSelection = (filesList) => {
     if (!filesList || filesList.length === 0) return;
-    const newFiles = Array.from(filesList).filter((f) => f.type.startsWith('image/'));
+    const newFiles = Array.from(filesList).filter(
+      (f) => f.type.startsWith('image/') || f.type.startsWith('video/')
+    );
     if (newFiles.length === 0) {
-      alert('Mohon pilih file gambar yang valid (JPG, PNG, atau WEBP).');
+      alert('Mohon pilih file gambar atau video yang valid (JPG, PNG, WEBP, MP4, MOV).');
       return;
     }
 
     newFiles.forEach((file) => {
       const previewUrl = URL.createObjectURL(file);
+      const isVideo = file.type.startsWith('video/');
       state.pendingUploadFiles.push({
         id: 'f_' + Math.random().toString(36).substring(2, 9),
         file,
         previewUrl,
+        isVideo,
       });
     });
 
@@ -558,12 +645,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Submit Upload Foto (Bisa Banyak Sekaligus)
+  // Submit Upload Foto / Video (Bisa Banyak Sekaligus)
   if (formUploadPhoto) {
     formUploadPhoto.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!state.pendingUploadFiles || state.pendingUploadFiles.length === 0) {
-        alert('Silakan pilih minimal 1 foto terlebih dahulu!');
+        alert('Silakan pilih minimal 1 foto atau video terlebih dahulu!');
         return;
       }
 
@@ -573,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const caption = document.getElementById('upload-caption').value.trim();
 
       if (!baseTitle) {
-        alert('Mohon isi judul foto kegiatan.');
+        alert('Mohon isi judul kegiatan.');
         return;
       }
 
@@ -590,12 +677,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (btnSubmitUpload) {
             btnSubmitUpload.innerHTML = `
               <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent inline-block mr-2"></div>
-              Mengunggah ${i + 1} dari ${total} foto...
+              Mengunggah ${i + 1} dari ${total} media...
             `;
           }
 
           if (state.supabaseClient) {
-            const fileExt = item.file.name.split('.').pop() || 'jpg';
+            const fileExt = item.file.name.split('.').pop() || (item.isVideo ? 'mp4' : 'jpg');
             const fileName = `hk_${Date.now()}_${Math.random().toString(36).substring(2, 8)}_${i}.${fileExt}`;
             const filePath = `${fileName}`;
 
@@ -640,6 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: insertData[0].date,
                 imageUrl: insertData[0].image_url,
                 caption: insertData[0].caption,
+                mediaType: item.isVideo ? 'video' : 'image',
               });
             }
           } else {
@@ -657,6 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
               date,
               caption,
               imageUrl: base64Url,
+              mediaType: item.isVideo ? 'video' : 'image',
             });
           }
         }
@@ -672,16 +761,16 @@ document.addEventListener('DOMContentLoaded', () => {
         state.pendingUploadFiles = [];
 
         if (modalUpload) modalUpload.classList.remove('open');
-        showToast(`Berhasil mengunggah ${total} foto ke galeri!`);
+        showToast(`Berhasil mengunggah ${total} media ke galeri!`);
         updatePhotoCountBadge();
         renderGallery();
       } catch (error) {
-        console.error('Error saat upload foto:', error);
-        alert('Gagal mengunggah foto: ' + (error.message || 'Terjadi kesalahan'));
+        console.error('Error saat upload media:', error);
+        alert('Gagal mengunggah media: ' + (error.message || 'Terjadi kesalahan'));
       } finally {
         if (btnSubmitUpload) {
           btnSubmitUpload.disabled = false;
-          btnSubmitUpload.innerHTML = 'Unggah Foto Sekarang';
+          btnSubmitUpload.innerHTML = 'Unggah Media Sekarang';
         }
       }
     });

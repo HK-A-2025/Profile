@@ -3,7 +3,7 @@
 -- Fakultas Syariah — UIN Siber Syekh Nurjati Cirebon
 -- ==========================================================
 
--- 1. Tabel Foto Galeri
+-- 1. Tabel Foto & Video Galeri
 CREATE TABLE IF NOT EXISTS public.gallery_photos (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(255) NOT NULL,
@@ -11,8 +11,12 @@ CREATE TABLE IF NOT EXISTS public.gallery_photos (
   date DATE DEFAULT CURRENT_DATE,
   image_url TEXT NOT NULL,
   caption TEXT,
+  media_type VARCHAR(20) DEFAULT 'image',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migrasi aman jika tabel sudah dibuat sebelumnya:
+ALTER TABLE public.gallery_photos ADD COLUMN IF NOT EXISTS media_type VARCHAR(20) DEFAULT 'image';
 
 -- 2. Tabel Pesan Anonim (NGL Kelas)
 CREATE TABLE IF NOT EXISTS public.anonymous_messages (
