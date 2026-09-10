@@ -1484,27 +1484,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <!-- Isi Pesan -->
           <p class="text-xs font-semibold text-[#2c150c] whitespace-pre-wrap leading-relaxed">"${cleanMsg}"</p>
-
-          <!-- Bilah Petunjuk Jejak Digital (NGL Pro) -->
-          ${
-            metaText
-              ? `
-            <div class="rounded-xl border border-amber-200/90 bg-amber-50/80 p-2.5 text-[11px] text-[#753e1f]">
-              <div class="flex items-center gap-1.5 font-bold text-[#61331d] text-xs pb-1 border-b border-amber-200/70">
-                <i data-lucide="fingerprint" class="w-3.5 h-3.5 text-[#9d5f2f]"></i>
-                <span>Petunjuk Jejak Digital Pengirim:</span>
-              </div>
-              <div class="pt-1.5 font-mono text-[10.5px] leading-relaxed whitespace-pre-line text-[#61331d]/90">
-                ${metaText}
-              </div>
-            </div>
-          `
-              : `
-            <div class="text-[10px] text-[#8c7163] italic">
-              (Pesan lawas: dikirim sebelum sistem jejak digital aktif)
-            </div>
-          `
-          }
         </div>
       `;
       })
