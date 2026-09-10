@@ -1272,6 +1272,113 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+
+  // Deteksi Jejak Digital Pengirim (Perangkat, Browser, Layar, Lokasi/IP)
+  const getClientFootprint = async () => {
+    const ua = navigator.userAgent || '';
+    let device = 'Perangkat Tidak Dikenal';
+    let os = 'OS Tidak Dikenal';
+
+    if (/iPhone/i.test(ua)) {
+      device = 'Apple iPhone';
+      os = 'iOS';
+      const match = ua.match(/OS (\d+[_\d]*)/);
+      if (match) os += ` ${match[1].replace(/_/g, '.')}`;
+    } else if (/iPad/i.test(ua)) {
+      device = 'Apple iPad';
+      os = 'iPadOS';
+    } else if (/Android/i.test(ua)) {
+      device = 'Smartphone Android';
+      os = 'Android';
+      const match = ua.match(/Android\s+([0-9.]+)/);
+      if (match) os += ` ${match[1]}`;
+      const modelMatch = ua.match(/;\s*([^;]+)\s+Build/);
+      if (modelMatch && modelMatch[1]) {
+        device = `Android (${modelMatch[1].trim()})`;
+      }
+    } else if (/Windows NT/i.test(ua)) {
+      device = 'PC / Laptop Windows';
+      if (/Windows NT 10.0/i.test(ua)) os = 'Windows 10/11';
+      else os = 'Windows';
+    } else if (/Macintosh/i.test(ua)) {
+      device = 'Apple Mac / MacBook';
+      os = 'macOS';
+    } else if (/Linux/i.test(ua)) {
+      device = 'Perangkat Linux';
+      os = 'Linux';
+    }
+
+    // Deteksi Aplikasi / Browser
+    let browser = 'Browser Standar';
+    if (/Instagram/i.test(ua)) {
+      browser = 'Instagram In-App Browser 📷';
+    } else if (/TikTok/i.test(ua)) {
+      browser = 'TikTok In-App Browser 🎵';
+    } else if (/SamsungBrowser/i.test(ua)) {
+      browser = 'Samsung Internet';
+    } else if (/Edg/i.test(ua)) {
+      browser = 'Microsoft Edge';
+    } else if (/Chrome/i.test(ua)) {
+      browser = 'Google Chrome';
+    } else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) {
+      browser = 'Apple Safari';
+    } else if (/Firefox/i.test(ua)) {
+      browser = 'Mozilla Firefox';
+    }
+
+    const screenInfo = `${window.screen.width}x${window.screen.height}`;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta';
+
+    // Deteksi Lokasi & Provider via IP (timeout 1.8 detik agar tidak mengganggu pengalaman pengguna)
+    let ipInfo = null;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1800);
+      const res = await fetch('https://ipwho.is/', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success) {
+          ipInfo = data;
+        }
+      }
+    } catch (e) {}
+
+    const lines = [];
+    lines.push(`📱 Perangkat : ${device} (${os})`);
+    lines.push(`🌐 Browser   : ${browser}`);
+    lines.push(`📏 Resolusi  : ${screenInfo} px`);
+
+    if (ipInfo) {
+      const city = ipInfo.city || 'Tidak diketahui';
+      const region = ipInfo.region || '';
+      const loc = region ? `${city}, ${region}` : city;
+      const isp = (ipInfo.connection && ipInfo.connection.isp) || 'ISP Lokal';
+      lines.push(`📍 Lokasi    : ${loc} (${ipInfo.country || 'Indonesia'})`);
+      lines.push(`📡 Jaringan  : ${isp} (IP: ${ipInfo.ip || '-'})`);
+    } else {
+      lines.push(`📍 Zona Waktu: ${timezone}`);
+    }
+
+    return lines.join('\n');
+  };
+
+  // Parser pemisah pesan dan jejak digital
+  const parseMessageMeta = (raw) => {
+    if (!raw) return { message: '', metaText: null };
+    const marker = '\n\n---\n[Jejak Digital HK A]\n';
+    const idx = raw.indexOf(marker);
+    if (idx !== -1) {
+      const cleanMessage = raw.substring(0, idx).trim();
+      const metaBlock = raw.substring(idx + marker.length).trim();
+      return {
+        message: cleanMessage,
+        metaText: metaBlock,
+      };
+    }
+    return { message: raw, metaText: null };
+  };
+
   // Kirim Pesan Anonim (NGL)
   const formAnonMessage = document.getElementById('form-anon-message');
   const inputAnonMessage = document.getElementById('input-anon-message');
@@ -1289,9 +1396,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
+        // Ambil jejak digital perangkat pengirim (NGL Pro style)
+        const footprint = await getClientFootprint();
+        const fullMessagePayload = `${messageText}\n\n---\n[Jejak Digital HK A]\n${footprint}`;
+
         if (state.supabaseClient) {
           await state.supabaseClient.from('anonymous_messages').insert([
-            { message: messageText },
+            { message: fullMessagePayload },
           ]);
         }
 
@@ -1299,7 +1410,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cachedMsgs = JSON.parse(localStorage.getItem('hka_anon_messages') || '[]');
         cachedMsgs.unshift({
           id: 'msg_' + Date.now(),
-          message: messageText,
+          message: fullMessagePayload,
           created_at: new Date().toISOString(),
         });
         localStorage.setItem('hka_anon_messages', JSON.stringify(cachedMsgs));
@@ -1345,17 +1456,101 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     listContainer.innerHTML = messages
-      .map(
-        (m) => `
-        <div class="rounded-xl border border-[#eddcd0] bg-white p-3 text-left shadow-xs">
-          <p class="text-xs text-[#2c150c]">"${m.message}"</p>
-          <span class="text-[10px] text-[#8c7163] mt-1 block">
-            ${new Date(m.created_at).toLocaleString('id-ID')}
-          </span>
+      .map((m) => {
+        const { message: cleanMsg, metaText } = parseMessageMeta(m.message);
+        return `
+        <div class="rounded-2xl border border-[#eddcd0] bg-white p-3.5 text-left shadow-xs space-y-2.5 relative" data-msg-id="${m.id}">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-1.5">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-rose-50 text-rose-600">
+                <i data-lucide="message-square-heart" class="w-3.5 h-3.5"></i>
+              </span>
+              <span class="text-xs font-bold text-[#9d5f2f]">Pesan Anonim</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] text-[#8c7163] font-medium bg-[#f5eee7] px-2 py-0.5 rounded-full border border-[#eddcd0]">
+                ${new Date(m.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}
+              </span>
+              <button 
+                type="button" 
+                class="btn-delete-message flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                data-msg-id="${m.id}"
+                title="Hapus pesan ini"
+              >
+                <i data-lucide="trash-2" class="w-3.5 h-3.5 pointer-events-none"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Isi Pesan -->
+          <p class="text-xs font-semibold text-[#2c150c] whitespace-pre-wrap leading-relaxed">"${cleanMsg}"</p>
+
+          <!-- Bilah Petunjuk Jejak Digital (NGL Pro) -->
+          ${
+            metaText
+              ? `
+            <div class="rounded-xl border border-amber-200/90 bg-amber-50/80 p-2.5 text-[11px] text-[#753e1f]">
+              <div class="flex items-center gap-1.5 font-bold text-[#61331d] text-xs pb-1 border-b border-amber-200/70">
+                <i data-lucide="fingerprint" class="w-3.5 h-3.5 text-[#9d5f2f]"></i>
+                <span>Petunjuk Jejak Digital Pengirim:</span>
+              </div>
+              <div class="pt-1.5 font-mono text-[10.5px] leading-relaxed whitespace-pre-line text-[#61331d]/90">
+                ${metaText}
+              </div>
+            </div>
+          `
+              : `
+            <div class="text-[10px] text-[#8c7163] italic">
+              (Pesan lawas: dikirim sebelum sistem jejak digital aktif)
+            </div>
+          `
+          }
         </div>
-      `
-      )
+      `;
+      })
       .join('');
+
+    // Re-trigger icon creation
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+
+    // Pasang Event Listener Tombol Hapus Pesan
+    listContainer.querySelectorAll('.btn-delete-message').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const msgId = btn.getAttribute('data-msg-id');
+        confirmDeleteMessage(msgId);
+      });
+    });
+  };
+
+  // Konfirmasi & Hapus Pesan Masuk
+  const confirmDeleteMessage = async (msgId) => {
+    if (!state.isAdmin) return;
+    const confirmAction = confirm('Apakah Anda yakin ingin menghapus pesan ini?');
+    if (!confirmAction) return;
+
+    try {
+      if (state.supabaseClient) {
+        const { error } = await state.supabaseClient
+          .from('anonymous_messages')
+          .delete()
+          .eq('id', msgId);
+        if (error) console.warn('Supabase delete message warning:', error);
+      }
+
+      // Hapus dari cache lokal juga
+      const cachedMsgs = JSON.parse(localStorage.getItem('hka_anon_messages') || '[]');
+      const updated = cachedMsgs.filter((m) => String(m.id) !== String(msgId));
+      localStorage.setItem('hka_anon_messages', JSON.stringify(updated));
+
+      renderAdminMessages();
+      showToast('Pesan berhasil dihapus.');
+    } catch (err) {
+      console.error('Gagal menghapus pesan:', err);
+      alert('Gagal menghapus pesan: ' + err.message);
+    }
   };
 
   // Toast Notification

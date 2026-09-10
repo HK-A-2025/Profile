@@ -45,6 +45,9 @@ CREATE POLICY "Public insert anonymous_messages" ON public.anonymous_messages FO
 DROP POLICY IF EXISTS "Public read anonymous_messages" ON public.anonymous_messages;
 CREATE POLICY "Public read anonymous_messages" ON public.anonymous_messages FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Public delete anonymous_messages" ON public.anonymous_messages;
+CREATE POLICY "Public delete anonymous_messages" ON public.anonymous_messages FOR DELETE USING (true);
+
 -- 5. Storage Bucket untuk File Foto Galeri
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('gallery', 'gallery', true) 
